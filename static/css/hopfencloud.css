@@ -1,0 +1,63 @@
+:root {
+    --level-0: #121212;
+    --primary: #8a0808;
+    --primary-hover: #6e0707;
+    --text: #eee;
+}
+
+body {
+    margin: 0;
+    color: var(--text);
+    background-color: var(--level-0);
+    font-family: "Noto Kufi Arabic", sans-serif;
+}
+
+.invert {
+    filter: invert(100%);
+}
+
+.button {
+
+}
+
+/*
+Menu declaration
+ */
+
+.topbar {
+    height: 4em;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    background-color: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+}
+
+.topbarItem {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100%;
+    border-radius: 0;
+    border: 0;
+    width: 8rem;
+    background-color: var(--primary);
+    transition: all ease-in-out 200ms;
+    cursor: pointer;
+}
+
+.topbarItem:hover {
+    background-color: var(--primary-hover);
+}
+
+.topbarItem img {
+    height: 70%;
+}
+
+.topbarBar {
+    display: flex;
+    height: 100%;
+}

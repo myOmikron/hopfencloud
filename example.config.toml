@@ -1,0 +1,14 @@
+[Database]
+Driver = "sqlite"
+Name = "hopfencloud.sqlite3"
+Port = 3306
+Host = "127.0.0.1"
+User = "hopfencloud"
+Password = ""
+
+[Server]
+ListenAddress = "127.0.0.1:8080"
+AllowedHosts = [
+    {Host = "127.0.0.1", Https = true}
+]
+UseForwardedProtoHeader = false
