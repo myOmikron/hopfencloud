@@ -1,4 +1,4 @@
-module hopfencloud
+module github.com/myOmikron/hopfencloud
 
 go 1.18
 
