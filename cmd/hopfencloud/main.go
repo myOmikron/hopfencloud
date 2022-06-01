@@ -2,9 +2,11 @@ package main
 
 import (
 	"fmt"
-	"github.com/hellflame/argparse"
-	"hopfencloud/server"
 	"os"
+
+	"github.com/myOmikron/hopfencloud/server"
+
+	"github.com/hellflame/argparse"
 )
 
 func main() {

@@ -2,16 +2,19 @@ package server
 
 import (
 	"fmt"
+	"net"
+	"net/url"
+	"strconv"
+
+	"github.com/myOmikron/hopfencloud/models/conf"
+	"github.com/myOmikron/hopfencloud/models/db"
+
 	mysqlDriver "github.com/go-sql-driver/mysql"
 	"github.com/myOmikron/echotools/database"
 	"gorm.io/driver/mysql"
 	"gorm.io/driver/postgres"
 	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"hopfencloud/conf"
-	"net"
-	"net/url"
-	"strconv"
 )
 
 func initializeDatabase(config *conf.Config) *gorm.DB {
@@ -41,9 +44,9 @@ func initializeDatabase(config *conf.Config) *gorm.DB {
 		driver = postgres.Open(dsn.String())
 	}
 
-	db := database.Initialize(
+	dbase := database.Initialize(
 		driver,
 	)
 
-	return db
+	return dbase
 }

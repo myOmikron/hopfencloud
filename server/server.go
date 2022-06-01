@@ -3,19 +3,22 @@ package server
 import (
 	"errors"
 	"fmt"
-	"github.com/labstack/echo/v4"
-	mw "github.com/labstack/echo/v4/middleware"
-	"github.com/myOmikron/echotools/color"
-	"github.com/myOmikron/echotools/execution"
-	"github.com/myOmikron/echotools/middleware"
-	"github.com/myOmikron/echotools/worker"
-	"github.com/pelletier/go-toml"
-	"hopfencloud/conf"
 	"html/template"
 	"io/fs"
 	"io/ioutil"
 	"os"
 	"time"
+
+	"github.com/myOmikron/hopfencloud/models/conf"
+
+	"github.com/labstack/echo/v4"
+	mw "github.com/labstack/echo/v4/middleware"
+	"github.com/myOmikron/echotools/color"
+	"github.com/myOmikron/echotools/execution"
+	"github.com/myOmikron/echotools/middleware"
+	"github.com/myOmikron/echotools/utilitymodels"
+	"github.com/myOmikron/echotools/worker"
+	"github.com/pelletier/go-toml"
 )
 
 func StartServer(configPath string) {
