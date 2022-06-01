@@ -10,7 +10,12 @@ import (
 )
 
 func defineRoutes(e *echo.Echo, db *gorm.DB, config *conf.Config, wp worker.Pool) {
-	e.GET("/", handler.FileHandler)
+	webWrapper := web.Wrapper{
+		DB:         db,
+		Config:     config,
+		WorkerPool: wp,
+	}
+	e.GET("/login", webWrapper.Login)
 
 	e.Static("/static/", "static/")
 }
