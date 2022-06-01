@@ -85,6 +85,10 @@ func StartServer(configPath string) {
 	}
 	e.Use(middleware.Security(secConfig))
 
+	// Allowed authenticated backends
+	middleware.RegisterAuthProvider(utilitymodels.GetLocalUser(db))
+	middleware.RegisterAuthProvider(utilitymodels.GetLDAPUser(db))
+
 	// Router
 	defineRoutes(e, db, config, wp)
 
