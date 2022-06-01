@@ -61,7 +61,9 @@ func StartServer(configPath string) {
 	e.Renderer = renderer
 
 	// Middleware
-	e.Use(mw.Logger())
+	e.Use(mw.LoggerWithConfig(mw.LoggerConfig{
+		Format: "${time_rfc3339} :: ${status} ${method} ${uri} :: ${latency_human} ${error}\n",
+	}))
 	e.Use(mw.Recover())
 
 	duration := time.Hour * 24
