@@ -20,9 +20,14 @@ type Server struct {
 	UseForwardedProtoHeader bool
 }
 
+type General struct {
+	SiteName string
+}
+
 type Config struct {
 	Database Database
 	Server   Server
+	General  General
 }
 
 func (c *Config) CheckConfig() error {

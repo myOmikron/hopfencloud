@@ -12,3 +12,6 @@ AllowedHosts = [
     {Host = "127.0.0.1", Https = true}
 ]
 UseForwardedProtoHeader = false
+
+[General]
+SiteName = "Hopfencloud"
