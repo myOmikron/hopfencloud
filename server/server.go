@@ -56,7 +56,7 @@ func StartServer(configPath string) {
 
 	// Template rendering
 	renderer := &TemplateRenderer{
-		templates: template.Must(template.ParseGlob("templates/*.gohtml")),
+		templates: template.Must(template.ParseFS(os.DirFS("templates/"), "*.gohtml", "*/*.gohtml")),
 	}
 	e.Renderer = renderer
 
