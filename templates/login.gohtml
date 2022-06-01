@@ -1,5 +1,36 @@
 {{define "login"}}
 {{template "base/head" .}}
-HUIII
+    <div class="login">
+        <div class="loginBox">
+            <img class="invert logo" src="/static/img/network.svg" alt="hopfencloud icon">
+            <div class="loginGrid">
+                <h2 class="loginProviderHeading normal heading">Login provider</h2>
+                <div class="loginProviderList">
+                {{range .LoginProvider}}
+                    <a class="{{if .Selected}}loginCurrProvider{{else}}loginProvider{{end}}" href="/login?provider={{.Identifier}}">{{.Name}}</a>
+                {{end}}
+                </div>
+                <h2 class="loginHeading normal heading centered" id="loginHeading">Login</h2>
+                <form class="loginForm" aria-labelledby="loginHeading" method="POST" action="/login">
+                    <input type="hidden" name="provider" value="{{.SelectedProvider}}">
+                    <input class="input" aria-label="Username" placeholder="Username" name="username" required>
+                    <input class="input" type="password" aria-label="Password" placeholder="Password" name="password" required>
+                    <div class="loginRememberMe">
+                        <label>
+                            <input type="checkbox" name="remember_me">
+                            Remember me
+                        </label>
+                    {{if .ForgotPasswordAvailable}}
+                        <a class="link small" href="{{.ForgotPasswordLink}}">Forgot password?</a>
+                    {{end}}
+                    </div>
+                    <button class="button">Sign in</button>
+                {{if .RegistrationEnabled}}
+                    <a class="link small" href="/register">Register instead</a>
+                {{end}}
+                </form>
+            </div>
+        </div>
+    </div>
 {{template "base/footer" .}}
 {{end}}

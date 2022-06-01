@@ -1,7 +1,13 @@
 :root {
-    --level-0: #121212;
+    --level-0: #1e212c;
+    --level-1: #292d3b;
+    --level-2: #323648;
+    --level-3: #41475e;
+    --level-4: #515977;
+    --disabled: #4f5360;
     --primary: #8a0808;
     --primary-hover: #6e0707;
+    --text-dark: #ccc;
     --text: #eee;
 }
 
@@ -16,8 +22,45 @@ body {
     filter: invert(100%);
 }
 
-.button {
+.heading {
+    margin: 0;
+}
 
+.button {
+    cursor: pointer;
+    padding: 0.5rem;
+    border: 1px solid var(--level-4);
+    background-color: var(--level-2);
+    color: var(--text);
+    transition: all ease-in-out 200ms;
+}
+
+.button:hover {
+    background-color: var(--level-3);
+}
+
+.link {
+    color: var(--text-dark);
+    transition: all ease-in-out 200ms;
+}
+
+.link:hover {
+    color: var(--text);
+}
+
+.small {
+    font-size: small;
+}
+
+.normal {
+    font-weight: normal;
+}
+
+.input {
+    padding: 0.5rem;
+    border: 1px solid var(--level-3);
+    background-color: var(--level-0);
+    color: var(--text);
 }
 
 /*
@@ -60,4 +103,101 @@ Menu declaration
 .topbarBar {
     display: flex;
     height: 100%;
+}
+
+/*
+Login declaration
+ */
+
+.logo {
+    width: 10rem;
+}
+
+.login {
+    display: flex;
+    margin-top: 4rem;
+    justify-content: center;
+}
+
+.loginBox {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 2rem;
+    background-color: var(--level-1);
+    border: 1px solid var(--level-2);
+}
+
+.loginGrid {
+    display: grid;
+    grid-auto-columns: 1fr 1fr;
+    grid-auto-rows: auto auto;
+    grid-column-gap: 3rem;
+    margin-top: 2rem;
+}
+
+.loginProviderHeading {
+    grid-area: 1 / 1 / span 1 / span 1;
+    padding: 0 4rem 0 4rem;
+}
+
+.loginProviderList {
+    grid-area: 2 / 1 / span 1 / span 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.loginProvider {
+    cursor: pointer;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+    background-color: var(--level-2);
+    color: var(--text);
+    border: 1px solid var(--level-3);
+    margin: 0.25rem 0 0.25rem 0;
+    transition: all ease-in-out 200ms;
+    text-decoration: none;
+}
+
+.loginProvider:hover {
+    background-color: var(--level-3);
+    border: 1px solid var(--level-4);
+}
+
+.loginCurrProvider {
+    cursor: pointer;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+    color: var(--text);
+    margin: 0.25rem 0 0.25rem 0;
+    transition: all ease-in-out 200ms;
+    background-color: var(--level-3);
+    border: 1px solid var(--level-4);
+    text-decoration: none;
+}
+
+.loginHeading {
+    grid-area: 1 / 2 / span 1 / span 1;
+    text-align: center;
+}
+
+.loginForm {
+    grid-area: 2 / 2 / span 1 / span 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.loginForm input {
+    margin: 0.25rem 0 0.25rem 0;
+}
+
+.loginForm label {
+    font-size: small;
+}
+
+.loginForm button {
+    margin: 0.25rem 0 0.25rem 0;
+}
+
+.loginRememberMe {
+    display: flex;
+    justify-content: space-between;
 }
