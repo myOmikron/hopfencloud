@@ -21,7 +21,8 @@ type Server struct {
 }
 
 type General struct {
-	SiteName string
+	SiteName             string
+	RegistrationDisabled bool
 }
 
 type Config struct {
