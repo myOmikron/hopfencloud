@@ -36,7 +36,7 @@ func cleanupDatabase(db *gorm.DB) {
 		sessions := make([]utilitymodels.Session, 0)
 		localUsers := make([]utilitymodels.LocalUser, 0)
 		ldapUsers := make([]utilitymodels.LDAPUser, 0)
-		db.Find(&sessions)
+		db.Select("id", "auth_key", "auth_id").Find(&sessions)
 		// Only load IDs
 		db.Select("id").Find(&localUsers)
 		db.Select("id").Find(&ldapUsers)
