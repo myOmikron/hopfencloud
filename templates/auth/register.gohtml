@@ -1,0 +1,17 @@
+{{define "auth/register"}}
+{{template "base/head" .}}
+    <div class="register">
+        <div class="registerBox">
+            <img class="invert logo" src="/static/img/network.svg" alt="hopfencloud icon">
+            <h2 class="registerHeading heading normal" id="registrationHeading">Registration</h2>
+            <form class="registerForm" aria-labelledby="registrationHeading" method="POST" action="/register">
+                <input class="input" aria-label="Username" placeholder="Username" name="username" required>
+                <input class="input" type="email" aria-label="Email" placeholder="Email" name="email" required>
+                <input class="input" type="password" aria-label="Password" placeholder="Password" name="password" required>
+                <button class="button">Register</button>
+                <a class="small link" href="/login">Login instead</a>
+            </form>
+        </div>
+    </div>
+{{template "base/footer" .}}
+{{end}}
