@@ -2,12 +2,13 @@ package web
 
 import (
 	"fmt"
+	"regexp"
+	"strconv"
+
 	"github.com/labstack/echo/v4"
 	"github.com/myOmikron/echotools/auth"
 	"github.com/myOmikron/echotools/middleware"
 	"github.com/myOmikron/echotools/utilitymodels"
-	"regexp"
-	"strconv"
 )
 
 type LoginProvider struct {
