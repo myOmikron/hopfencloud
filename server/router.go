@@ -15,7 +15,8 @@ func defineRoutes(e *echo.Echo, db *gorm.DB, config *conf.Config, wp worker.Pool
 		Config:     config,
 		WorkerPool: wp,
 	}
-	e.GET("/login", webWrapper.Login)
+	e.GET("/login", webWrapper.LoginGet)
+	e.POST("/login", webWrapper.LoginPost)
 
 	e.Static("/static/", "static/")
 }

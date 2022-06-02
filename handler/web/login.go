@@ -3,6 +3,8 @@ package web
 import (
 	"fmt"
 	"github.com/labstack/echo/v4"
+	"github.com/myOmikron/echotools/auth"
+	"github.com/myOmikron/echotools/middleware"
 	"github.com/myOmikron/echotools/utilitymodels"
 	"regexp"
 	"strconv"
@@ -25,12 +27,12 @@ type LoginData struct {
 }
 
 type LoginArg struct {
-	Provider string `query:"provider"`
+	Provider string `query:"provider"` // Will be empty for local auth
 }
 
 var ReLdapProvider = regexp.MustCompile(`ldap(\d+)`)
 
-func (w *Wrapper) Login(c echo.Context) error {
+func (w *Wrapper) LoginGet(c echo.Context) error {
 	localProvider := LoginProvider{
 		Name:                 "Local",
 		RegistrationDisabled: w.Config.General.RegistrationDisabled,
@@ -96,4 +98,56 @@ func (w *Wrapper) Login(c echo.Context) error {
 		SelectedProvider:        loginArg.Provider,
 		RegistrationEnabled:     registrationEnabled,
 	})
+}
+
+type LoginRequest struct {
+	Username   string `form:"username"`
+	Password   string `form:"password"`
+	Provider   string `form:"provider"`    // Will be an empty string for local auth
+	RememberMe string `form:"remember_me"` // Will be "on" if checkbox was set
+}
+
+func (w *Wrapper) LoginPost(c echo.Context) error {
+	req := LoginRequest{}
+	if err := c.Bind(&req); err != nil {
+		//TODO: Display error page
+		return err
+	}
+
+	if req.Username == "" || req.Password == "" {
+		//TODO: Display error page
+		return c.String(400, "Username or password was empty")
+	}
+	if req.RememberMe != "" && req.RememberMe != "on" {
+		//TODO: Display error page
+		return c.String(400, "Invalid value for remember_me")
+	}
+
+	switch {
+	case req.Provider == "":
+		user, err := auth.AuthenticateLocalUser(w.DB, req.Username, req.Password)
+		if err != nil {
+			//TODO: Display error message
+			return c.String(400, err.Error())
+		}
+
+		if user == nil {
+			//TODO: Display error message
+			return c.String(500, "Internal server error")
+		}
+
+		if err := middleware.Login(w.DB, user, c, req.RememberMe == ""); err != nil {
+			//TODO: Display error message
+			return err
+		}
+
+	case ReLdapProvider.MatchString(req.Provider):
+		//TODO: Let user login
+		return c.String(500, "Not implemented yet")
+	default:
+		//TODO: Display error: Unknown Login Provider
+		return c.String(500, "Not implemented yet")
+	}
+
+	return c.Redirect(302, "/")
 }
