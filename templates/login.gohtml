@@ -7,7 +7,7 @@
                 <h2 class="loginProviderHeading normal heading">Login provider</h2>
                 <div class="loginProviderList">
                 {{range .LoginProvider}}
-                    <a class="{{if .Selected}}loginCurrProvider{{else}}loginProvider{{end}}" href="/login?provider={{.Identifier}}">{{.Name}}</a>
+                    <a class="loginProvider{{if .Selected}} loginCurrProvider{{end}}" href="/login?provider={{.Identifier}}">{{.Name}}</a>
                 {{end}}
                 </div>
                 <h2 class="loginHeading normal heading centered" id="loginHeading">Login</h2>

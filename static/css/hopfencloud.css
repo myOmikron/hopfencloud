@@ -164,14 +164,8 @@ Login declaration
 }
 
 .loginCurrProvider {
-    cursor: pointer;
-    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
-    color: var(--text);
-    margin: 0.25rem 0 0.25rem 0;
-    transition: all ease-in-out 200ms;
     background-color: var(--level-3);
     border: 1px solid var(--level-4);
-    text-decoration: none;
 }
 
 .loginHeading {
