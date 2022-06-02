@@ -12,6 +12,7 @@
                 </div>
                 <h2 class="loginHeading normal heading centered" id="loginHeading">Login</h2>
                 <form class="loginForm" aria-labelledby="loginHeading" method="POST" action="/login">
+                    <input type="hidden" name="redirect_to" value="{{.RedirectTo}}">
                     <input type="hidden" name="provider" value="{{.SelectedProvider}}">
                     <input class="input" aria-label="Username" placeholder="Username" name="username" required>
                     <input class="input" type="password" aria-label="Password" placeholder="Password" name="password" required>

@@ -24,10 +24,12 @@ type LoginData struct {
 	ForgotPasswordLink      string
 	SelectedProvider        string
 	RegistrationEnabled     bool
+	RedirectTo              string
 }
 
 type LoginArg struct {
-	Provider string `query:"provider"` // Will be empty for local auth
+	Provider   string `query:"provider"`    // Will be empty for local auth
+	RedirectTo string `query:"redirect_to"` // If empty, login will redirect to "/"
 }
 
 var ReLdapProvider = regexp.MustCompile(`ldap(\d+)`)
@@ -90,6 +92,10 @@ func (w *Wrapper) LoginGet(c echo.Context) error {
 		//TODO: Display "invalid login provider selected"
 	}
 
+	if loginArg.RedirectTo == "" {
+		loginArg.RedirectTo = "/"
+	}
+
 	return c.Render(200, "login", &LoginData{
 		PageTitle:               "Login - " + w.Config.General.SiteName,
 		LoginProvider:           lp,
@@ -97,6 +103,7 @@ func (w *Wrapper) LoginGet(c echo.Context) error {
 		ForgotPasswordAvailable: forgotPasswordAvailable,
 		SelectedProvider:        loginArg.Provider,
 		RegistrationEnabled:     registrationEnabled,
+		RedirectTo:              loginArg.RedirectTo,
 	})
 }
 
@@ -105,6 +112,7 @@ type LoginRequest struct {
 	Password   string `form:"password"`
 	Provider   string `form:"provider"`    // Will be an empty string for local auth
 	RememberMe string `form:"remember_me"` // Will be "on" if checkbox was set
+	RedirectTo string `form:"redirect_to"` // If empty, the user will be redirected to this page
 }
 
 func (w *Wrapper) LoginPost(c echo.Context) error {
@@ -149,5 +157,5 @@ func (w *Wrapper) LoginPost(c echo.Context) error {
 		return c.String(500, "Not implemented yet")
 	}
 
-	return c.Redirect(302, "/")
+	return c.Redirect(302, req.RedirectTo)
 }
