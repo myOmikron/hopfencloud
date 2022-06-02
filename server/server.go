@@ -92,6 +92,9 @@ func StartServer(configPath string) {
 	// Router
 	defineRoutes(e, db, config, wp)
 
+	// Start database cleaner
+	go cleanupDatabase(db)
+
 	execution.SignalStart(e, config.Server.ListenAddress, &execution.Config{
 		ReloadFunc: func() {
 			StartServer(configPath)
