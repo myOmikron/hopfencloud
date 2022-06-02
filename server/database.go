@@ -34,43 +34,45 @@ func cleanupDatabase(db *gorm.DB) {
 
 		// Delete sessions if the linked user does not exist anymore
 		sessions := make([]utilitymodels.Session, 0)
+		localUsers := make([]utilitymodels.LocalUser, 0)
+		ldapUsers := make([]utilitymodels.LDAPUser, 0)
 		db.Find(&sessions)
-
-		// It will be cheaper to reallocate those
-		localMap := make(map[uint]bool)
-		ldapMap := make(map[uint]bool)
+		// Only load IDs
+		db.Select("id").Find(&localUsers)
+		db.Select("id").Find(&ldapUsers)
 
 		toDeleteSessions := make([]uint, 0)
 
-		var count int64
+		localLookup := make(map[uint]bool)
+		ldapLookup := make(map[uint]bool)
 		for _, session := range sessions {
 			switch session.AuthKey {
 			case "local":
-				if value, exists := localMap[session.AuthID]; exists {
+				if value, exists := localLookup[session.AuthID]; exists {
 					if !value {
 						toDeleteSessions = append(toDeleteSessions, session.ID)
 					}
 				} else {
-					db.Find(&utilitymodels.LocalUser{}, "ID = ?", session.AuthID).Count(&count)
-					if count == 0 {
-						localMap[session.AuthID] = false
-						toDeleteSessions = append(toDeleteSessions, session.ID)
-					} else {
-						localMap[session.AuthID] = true
+					localLookup[session.AuthID] = false
+					for _, user := range localUsers {
+						if user.ID == session.AuthID {
+							localLookup[session.AuthID] = true
+							break
+						}
 					}
 				}
 			case "ldap":
-				if value, exists := ldapMap[session.AuthID]; exists {
+				if value, exists := ldapLookup[session.AuthID]; exists {
 					if !value {
 						toDeleteSessions = append(toDeleteSessions, session.ID)
 					}
 				} else {
-					db.Find(&utilitymodels.LDAPUser{}, "ID = ?", session.AuthID).Count(&count)
-					if count == 0 {
-						ldapMap[session.AuthID] = false
-						toDeleteSessions = append(toDeleteSessions, session.ID)
-					} else {
-						ldapMap[session.AuthID] = true
+					ldapLookup[session.AuthID] = false
+					for _, user := range ldapUsers {
+						if user.ID == session.AuthID {
+							ldapLookup[session.AuthID] = true
+							break
+						}
 					}
 				}
 			}
