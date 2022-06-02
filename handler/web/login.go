@@ -5,6 +5,9 @@ import (
 	"regexp"
 	"strconv"
 
+	"github.com/myOmikron/hopfencloud/models/db"
+	"github.com/myOmikron/hopfencloud/modules/logger"
+
 	"github.com/labstack/echo/v4"
 	"github.com/myOmikron/echotools/auth"
 	"github.com/myOmikron/echotools/middleware"
@@ -140,9 +143,18 @@ func (w *Wrapper) LoginPost(c echo.Context) error {
 			return c.String(400, err.Error())
 		}
 
-		if user == nil {
+		var localUser db.User
+		var count int64
+		w.DB.Select("mail_verified").Find(&localUser).Count(&count)
+		if count != 1 {
 			//TODO: Display error message
-			return c.String(500, "Internal server error")
+			logger.Info("User has no model linked")
+			return c.String(500, "Database error")
+		}
+
+		if !localUser.MailVerified {
+			//TODO: Display error message - add button to resend confirmation mail
+			return c.String(200, "Your email is not verified")
 		}
 
 		if err := middleware.Login(w.DB, user, c, req.RememberMe == ""); err != nil {
