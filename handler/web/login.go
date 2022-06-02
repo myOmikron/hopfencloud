@@ -97,7 +97,7 @@ func (w *Wrapper) LoginGet(c echo.Context) error {
 		loginArg.RedirectTo = "/"
 	}
 
-	return c.Render(200, "login", &LoginData{
+	return c.Render(200, "auth/login", &LoginData{
 		PageTitle:               "Login - " + w.Config.General.SiteName,
 		LoginProvider:           lp,
 		ForgotPasswordLink:      forgotPasswordLink,
