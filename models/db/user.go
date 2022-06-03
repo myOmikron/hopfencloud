@@ -1,6 +1,8 @@
 package db
 
-import "github.com/myOmikron/echotools/utilitymodels"
+import (
+	"github.com/myOmikron/echotools/utilitymodels"
+)
 
 type User struct {
 	utilitymodels.Common
