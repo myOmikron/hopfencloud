@@ -3,7 +3,6 @@ package tasks
 import (
 	"bytes"
 	"fmt"
-	"github.com/myOmikron/hopfencloud/modules/logger"
 	"net"
 	"net/smtp"
 	"net/url"
@@ -12,6 +11,7 @@ import (
 	"time"
 
 	"github.com/myOmikron/hopfencloud/models/db"
+	"github.com/myOmikron/hopfencloud/modules/logger"
 
 	"github.com/jordan-wright/email"
 	"github.com/myOmikron/echotools/worker"
