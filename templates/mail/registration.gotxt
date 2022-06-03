@@ -1,3 +1,11 @@
 {{define "registration"}}
+Hi {{.Username}},
 
+It seems you have just registered an account at {{.SiteName}}.
+To complete your registration, you need to confirm that you got this mail.
+To do so, use the following link:
+
+{{.RegistrationLink}}
+
+If you don't have an idea why you received this email, you can just ignore it.
 {{end}}
