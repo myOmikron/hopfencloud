@@ -41,7 +41,7 @@ var ReLdapProvider = regexp.MustCompile(`ldap(\d+)`)
 func (w *Wrapper) LoginGet(c echo.Context) error {
 	localProvider := LoginProvider{
 		Name:                 "Local",
-		RegistrationDisabled: w.Config.General.RegistrationDisabled,
+		RegistrationDisabled: w.Settings.LocalRegistrationDisabled,
 		Identifier:           "",
 	}
 
@@ -50,7 +50,7 @@ func (w *Wrapper) LoginGet(c echo.Context) error {
 
 	forgotPasswordAvailable := false
 	forgotPasswordLink := ""
-	registrationEnabled := !w.Config.General.RegistrationDisabled
+	registrationEnabled := !w.Settings.LocalRegistrationDisabled
 
 	ldapProviders := make([]utilitymodels.LDAPProvider, 0)
 	w.DB.Find(&ldapProviders)
@@ -101,7 +101,7 @@ func (w *Wrapper) LoginGet(c echo.Context) error {
 	}
 
 	return c.Render(200, "auth/login", &LoginData{
-		PageTitle:               "Login - " + w.Config.General.SiteName,
+		PageTitle:               "Login - " + w.Settings.SiteName,
 		LoginProvider:           lp,
 		ForgotPasswordLink:      forgotPasswordLink,
 		ForgotPasswordAvailable: forgotPasswordAvailable,

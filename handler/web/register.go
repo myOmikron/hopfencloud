@@ -3,10 +3,12 @@ package web
 import (
 	"github.com/myOmikron/hopfencloud/models/db"
 	"github.com/myOmikron/hopfencloud/modules/logger"
+	"github.com/myOmikron/hopfencloud/tasks"
 
 	"github.com/labstack/echo/v4"
 	"github.com/myOmikron/echotools/database"
 	"github.com/myOmikron/echotools/utilitymodels"
+	"github.com/myOmikron/echotools/worker"
 )
 
 type RegisterData struct {
@@ -15,7 +17,7 @@ type RegisterData struct {
 
 func (w *Wrapper) RegisterGet(c echo.Context) error {
 	return c.Render(200, "auth/register", &RegisterData{
-		PageTitle: "Registration - " + w.Config.General.SiteName,
+		PageTitle: "Registration - " + w.Settings.SiteName,
 	})
 }
 
@@ -73,6 +75,8 @@ func (w *Wrapper) RegisterPost(c echo.Context) error {
 		AuthID:  localUser.ID,
 		AuthKey: "local",
 	})
+
+	w.WorkerPool.AddTask(worker.NewTask(tasks.SendRegistrationMail))
 
 	//TODO: Render prettier template
 	return c.String(200, "Account created, email must be confirmed before you can login")

@@ -24,6 +24,8 @@ import (
 // some cleanup in the database:
 // - Remove expired sessions
 // - Removed sessions when the linked user doesn't exist anymore
+//TODO:
+// - Remove users if the linked localUser / ldapUser doesn't exist anymore
 func cleanupDatabase(db *gorm.DB) {
 	var start time.Time
 	for {
@@ -121,7 +123,16 @@ func initializeDatabase(config *conf.Config) *gorm.DB {
 		driver,
 
 		&db.User{},
+		&db.Settings{},
 	)
+
+	var count int64
+	dbase.Find(&db.Settings{}).Count(&count)
+	if count == 0 {
+		dbase.Create(&db.Settings{
+			SiteName: "Hopfencloud",
+		})
+	}
 
 	return dbase
 }

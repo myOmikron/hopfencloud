@@ -7,9 +7,11 @@ import (
 	"io/fs"
 	"io/ioutil"
 	"os"
+	textTemplate "text/template"
 	"time"
 
 	"github.com/myOmikron/hopfencloud/models/conf"
+	"github.com/myOmikron/hopfencloud/models/db"
 
 	"github.com/labstack/echo/v4"
 	mw "github.com/labstack/echo/v4/middleware"
@@ -41,7 +43,7 @@ func StartServer(configPath string) {
 		os.Exit(1)
 	}
 
-	db := initializeDatabase(config)
+	database := initializeDatabase(config)
 
 	// Web server
 	e := echo.New()
@@ -56,9 +58,10 @@ func StartServer(configPath string) {
 
 	// Template rendering
 	renderer := &TemplateRenderer{
-		templates: template.Must(template.ParseFS(os.DirFS("templates/html/"), "*.gohtml", "*/*.gohtml")),
+		templates: template.Must(template.ParseFS(os.DirFS("templates/html/"), "*/*.gohtml")),
 	}
 	e.Renderer = renderer
+	mailTemplates := textTemplate.Must(textTemplate.ParseFS(os.DirFS("templates/mail/"), "*.gotxt"))
 
 	// Middleware
 	e.Use(mw.LoggerWithConfig(mw.LoggerConfig{
@@ -67,7 +70,7 @@ func StartServer(configPath string) {
 	e.Use(mw.Recover())
 
 	duration := time.Hour * 24
-	e.Use(middleware.Session(db, &middleware.SessionConfig{
+	e.Use(middleware.Session(database, &middleware.SessionConfig{
 		CookieName: "sessionid",
 		CookieAge:  &duration,
 	}))
@@ -86,14 +89,18 @@ func StartServer(configPath string) {
 	e.Use(middleware.Security(secConfig))
 
 	// Allowed authenticated backends
-	middleware.RegisterAuthProvider(utilitymodels.GetLocalUser(db))
-	middleware.RegisterAuthProvider(utilitymodels.GetLDAPUser(db))
+	middleware.RegisterAuthProvider(utilitymodels.GetLocalUser(database))
+	middleware.RegisterAuthProvider(utilitymodels.GetLDAPUser(database))
+
+	// Settings
+	var settings db.Settings
+	settingsReloadFunc := getSettingsReloadFunc(&settings, database)
 
 	// Router
-	defineRoutes(e, db, config, wp)
+	defineRoutes(e, database, config, wp, mailTemplates, settingsReloadFunc, &settings)
 
 	// Start database cleaner
-	go cleanupDatabase(db)
+	go cleanupDatabase(database)
 
 	execution.SignalStart(e, config.Server.ListenAddress, &execution.Config{
 		ReloadFunc: func() {
