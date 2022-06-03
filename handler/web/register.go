@@ -1,14 +1,16 @@
 package web
 
 import (
+	"net/mail"
+
 	"github.com/myOmikron/hopfencloud/models/db"
+	"github.com/myOmikron/hopfencloud/modules/crypt"
 	"github.com/myOmikron/hopfencloud/modules/logger"
 	"github.com/myOmikron/hopfencloud/modules/tasks"
 
 	"github.com/labstack/echo/v4"
 	"github.com/myOmikron/echotools/database"
 	"github.com/myOmikron/echotools/utilitymodels"
-	"github.com/myOmikron/echotools/worker"
 )
 
 type RegisterData struct {
@@ -38,21 +40,27 @@ func (w *Wrapper) RegisterPost(c echo.Context) error {
 
 	if req.Username == "" {
 		//TODO: Display error message
-		return c.String(200, "Username must not be empty")
+		return c.String(400, "Username must not be empty")
 	}
 
 	if req.Password == "" {
 		//TODO: Display error message
-		return c.String(200, "Password must not be empty")
+		return c.String(400, "Password must not be empty")
 	}
 
 	if req.Email == "" {
 		//TODO: Display error message
-		return c.String(200, "Email must not be empty")
+		return c.String(400, "Email must not be empty")
+	}
+
+	address, err := mail.ParseAddress(req.Email)
+	if err != nil {
+		//TODO: Display error message
+		return c.String(400, "Email is invalid")
 	}
 
 	selected := make([]utilitymodels.LocalUser, 0)
-	w.DB.Where("username = ? OR email = ?", req.Username, req.Email).Find(&utilitymodels.LocalUser{})
+	w.DB.Where("username = ? OR email = ?", req.Username, address.Address).Find(&utilitymodels.LocalUser{})
 	if len(selected) != 0 {
 		for _, user := range selected {
 			if user.Username == req.Username {
@@ -64,19 +72,47 @@ func (w *Wrapper) RegisterPost(c echo.Context) error {
 		return c.String(400, "Email already exists")
 	}
 
-	localUser, err := database.CreateLocalUser(w.DB, req.Username, req.Password, &req.Email)
+	var count int64
+	w.DB.Where(&db.UserMailConfirmation{}, "email = ?", address.Address).Count(&count)
+	if count != 0 {
+		//TODO: Display error message
+		return c.String(400, "Email already exists")
+	}
+
+	localUser, err := database.CreateLocalUser(w.DB, req.Username, req.Password, &address.Address)
 	if err != nil {
 		logger.Error(err.Error())
 		//TODO: Display error message
 		return c.String(500, "User creation failed")
 	}
 
-	w.DB.Create(&db.User{
+	user := db.User{
 		AuthID:  localUser.ID,
 		AuthKey: "local",
+	}
+	w.DB.Create(&user)
+
+	var token string
+	for {
+		token, err = crypt.GetToken()
+		if err != nil {
+			//TODO: Display error message
+			return c.String(500, "Internal server error")
+		}
+
+		w.DB.Find(&db.UserMailConfirmation{}, "token = ?", token).Count(&count)
+		if count == 0 {
+			break
+		}
+	}
+
+	w.DB.Create(&db.UserMailConfirmation{
+		User:  user,
+		Mail:  address.Address,
+		Token: token,
 	})
 
-	w.WorkerPool.AddTask(worker.NewTask(tasks.SendRegistrationMail))
+	w.WorkerPool.AddTask(tasks.SendRegistrationMail(address.Address, req.Username, token, w.Settings, w.MailTemplates))
 
 	//TODO: Render prettier template
 	return c.String(200, "Account created, email must be confirmed before you can login")

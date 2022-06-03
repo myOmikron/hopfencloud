@@ -123,6 +123,7 @@ func initializeDatabase(config *conf.Config) *gorm.DB {
 		driver,
 
 		&db.User{},
+		&db.UserMailConfirmation{},
 		&db.Settings{},
 	)
 
