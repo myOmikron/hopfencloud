@@ -3,7 +3,7 @@ package web
 import (
 	"github.com/myOmikron/hopfencloud/models/db"
 	"github.com/myOmikron/hopfencloud/modules/logger"
-	"github.com/myOmikron/hopfencloud/tasks"
+	"github.com/myOmikron/hopfencloud/modules/tasks"
 
 	"github.com/labstack/echo/v4"
 	"github.com/myOmikron/echotools/database"
