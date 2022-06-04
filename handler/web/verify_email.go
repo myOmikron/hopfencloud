@@ -50,30 +50,30 @@ func (w *Wrapper) VerifyEmailPost(c echo.Context) error {
 	}
 
 	var count int64
-	userMailConfirmation := db.UserMailConfirmation{}
-	w.DB.Preload("User").Find(&userMailConfirmation, "token = ?", arg.Token).Count(&count)
+	accountEmailVerification := db.AccountEmailVerification{}
+	w.DB.Preload("Account").Find(&accountEmailVerification, "token = ?", arg.Token).Count(&count)
 	if count != 1 {
 		//TODO: Display error message
 		return c.String(400, "Invalid token")
 	}
 
-	if userMailConfirmation.User.AuthKey != "local" {
+	if accountEmailVerification.Account.AuthKey != "local" {
 		//TODO: Invalid user for mail change
 		logger.Info("Non local user tried mail change")
 		return c.String(500, "Internal server error")
 	}
 
 	var user utilitymodels.LocalUser
-	w.DB.Find(&user, "id = ?", userMailConfirmation.User.AuthID).Count(&count)
+	w.DB.Find(&user, "id = ?", accountEmailVerification.Account.AuthID).Count(&count)
 	if count != 1 {
 		//TODO: Invalid internal user model
 		logger.Info("No local user was found.")
 		return c.String(500, "Internal server error")
 	}
 
-	user.Email = &userMailConfirmation.Mail
+	user.Email = &accountEmailVerification.Email
 	w.DB.Save(&user)
-	w.DB.Delete(&userMailConfirmation)
+	w.DB.Delete(&accountEmailVerification)
 
 	return c.Redirect(302, "/login")
 }

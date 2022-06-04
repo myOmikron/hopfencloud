@@ -122,8 +122,8 @@ func initializeDatabase(config *conf.Config) *gorm.DB {
 	dbase := database.Initialize(
 		driver,
 
-		&db.User{},
-		&db.UserMailConfirmation{},
+		&db.Account{},
+		&db.AccountEmailVerification{},
 		&db.Settings{},
 	)
 

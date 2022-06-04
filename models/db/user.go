@@ -4,15 +4,15 @@ import (
 	"github.com/myOmikron/echotools/utilitymodels"
 )
 
-type UserMailConfirmation struct {
+type AccountEmailVerification struct {
 	utilitymodels.Common
-	UserID uint
-	User   User
-	Mail   string
-	Token  string
+	AccountID uint
+	Account   Account
+	Email     string
+	Token     string
 }
 
-type User struct {
+type Account struct {
 	utilitymodels.Common
 	AuthID  uint
 	AuthKey string

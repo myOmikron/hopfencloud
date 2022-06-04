@@ -74,7 +74,7 @@ func (w *Wrapper) RegisterPost(c echo.Context) error {
 	}
 
 	var count int64
-	w.DB.Where(&db.UserMailConfirmation{}, "email = ?", address.Address).Count(&count)
+	w.DB.Where(&db.AccountEmailVerification{}, "email = ?", address.Address).Count(&count)
 	if count != 0 {
 		//TODO: Display error message
 		return c.String(400, "Email already exists")
@@ -84,14 +84,14 @@ func (w *Wrapper) RegisterPost(c echo.Context) error {
 	if err != nil {
 		logger.Error(err.Error())
 		//TODO: Display error message
-		return c.String(500, "User creation failed")
+		return c.String(500, "Account creation failed")
 	}
 
-	user := db.User{
+	account := db.Account{
 		AuthID:  localUser.ID,
 		AuthKey: "local",
 	}
-	w.DB.Create(&user)
+	w.DB.Create(&account)
 
 	var token string
 	for {
@@ -101,16 +101,16 @@ func (w *Wrapper) RegisterPost(c echo.Context) error {
 			return c.String(500, "Internal server error")
 		}
 
-		w.DB.Find(&db.UserMailConfirmation{}, "token = ?", token).Count(&count)
+		w.DB.Find(&db.AccountEmailVerification{}, "token = ?", token).Count(&count)
 		if count == 0 {
 			break
 		}
 	}
 
-	w.DB.Create(&db.UserMailConfirmation{
-		User:  user,
-		Mail:  address.Address,
-		Token: token,
+	w.DB.Create(&db.AccountEmailVerification{
+		Account: account,
+		Email:   address.Address,
+		Token:   token,
 	})
 
 	w.WorkerPool.AddTask(tasks.SendRegistrationMail(address.Address, req.Username, token, w.Settings, w.MailTemplates))
