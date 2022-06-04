@@ -60,7 +60,8 @@ func (w *Wrapper) RegisterPost(c echo.Context) error {
 	}
 
 	selected := make([]utilitymodels.LocalUser, 0)
-	w.DB.Where("username = ? OR email = ?", req.Username, address.Address).Find(&utilitymodels.LocalUser{})
+	w.DB.Find(&selected, "username = ? OR email = ?", req.Username, address.Address)
+
 	if len(selected) != 0 {
 		for _, user := range selected {
 			if user.Username == req.Username {
