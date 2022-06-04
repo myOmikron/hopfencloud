@@ -7,16 +7,16 @@ import (
 type Settings struct {
 	utilitymodels.Common
 	//General
-	SiteName      string
-	PublicAddress string // Used for links pointing to this server, e.g. confirmation mail link generation
+	SiteName      string `gorm:"size:256"`
+	PublicAddress string `gorm:"size:256"` // Used for links pointing to this server, e.g. confirmation mail link generation
 
 	//Authentication
 	LocalRegistrationDisabled bool
 
 	//SMTP related settings
-	SMTPFrom     string
-	SMTPHost     string
-	SMTPPort     uint
-	SMTPUser     string
-	SMTPPassword string
+	SMTPFrom     string `gorm:"size:256"`
+	SMTPHost     string `gorm:"size:256"`
+	SMTPPort     uint16
+	SMTPUser     string `gorm:"size:256"`
+	SMTPPassword string `gorm:"size:256"`
 }

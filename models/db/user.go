@@ -7,13 +7,13 @@ import (
 type AccountEmailVerification struct {
 	utilitymodels.Common
 	AccountID uint
-	Account   Account
-	Email     string
-	Token     string
+	Account   Account `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Email     string  `gorm:"size:256"`
+	Token     string  `gorm:"size:256"`
 }
 
 type Account struct {
 	utilitymodels.Common
 	AuthID  uint
-	AuthKey string
+	AuthKey string `gorm:"size:256"`
 }
