@@ -4,6 +4,12 @@ import (
 	"github.com/myOmikron/echotools/utilitymodels"
 )
 
+type VirtualUser struct {
+	utilitymodels.Common
+	ModelID   uint
+	ModelType string
+}
+
 type AccountEmailVerification struct {
 	utilitymodels.Common
 	AccountID uint
@@ -14,6 +20,7 @@ type AccountEmailVerification struct {
 
 type Account struct {
 	utilitymodels.Common
-	AuthID  uint
-	AuthKey string `gorm:"size:256"`
+	AuthID      uint
+	AuthKey     string      `gorm:"size:256"`
+	VirtualUser VirtualUser `gorm:"polymorphic:Model;"`
 }
