@@ -68,5 +68,8 @@ func defineRoutes(
 	e.GET("/register", unauthenticatedOnly(webWrapper.RegisterGet))
 	e.POST("/register", unauthenticatedOnly(webWrapper.RegisterPost))
 
+	e.GET("/verify_email", webWrapper.VerifyEmailGet)
+	e.POST("/verify_email", webWrapper.VerifyEmailPost)
+
 	e.Static("/static/", "static/")
 }
