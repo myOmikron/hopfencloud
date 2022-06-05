@@ -2,6 +2,17 @@
 
 Just another cloud project.
 
+## Requirements
+
+To compile hopfencloud, the following dependencies must be installed:
+- `make`
+- `pkg-config`
+
+Additionally, a recent version of golang (`>= 1.18`) is needed.
+If you are using a distribution with a slow pace package release cycle
+(e.g. Debian / CentOS), you may want to consider a backported version or
+a version directly from [the official site](https://go.dev/doc/install).
+
 ## Installation
 
 Compilation and installation are managed via Makefile.
