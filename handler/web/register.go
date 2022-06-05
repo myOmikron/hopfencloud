@@ -80,7 +80,7 @@ func (w *Wrapper) RegisterPost(c echo.Context) error {
 		return c.String(400, "Email already exists")
 	}
 
-	localUser, err := database.CreateLocalUser(w.DB, req.Username, req.Password, &address.Address)
+	localUser, err := database.CreateLocalUser(w.DB, req.Username, req.Password, nil)
 	if err != nil {
 		logger.Error(err.Error())
 		//TODO: Display error message
