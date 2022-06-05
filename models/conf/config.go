@@ -15,6 +15,7 @@ type AllowedHost struct {
 }
 
 type Server struct {
+	CLISockPath             string
 	ListenAddress           string
 	AllowedHosts            []*AllowedHost
 	UseForwardedProtoHeader bool
