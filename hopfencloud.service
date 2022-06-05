@@ -30,9 +30,9 @@ WorkingDirectory=/var/lib/private/hopfencloud/
 ExecStartPre=+bash -c "chown -R :$(stat -c %%g /run/hopfencloud) /etc/hopfencloud/config.toml"
 ExecStartPre=+bash -c "chown -R $(stat -c %%u /run/hopfencloud):$(stat -c %%g /run/hopfencloud) /var/lib/private/hopfencloud"
 ExecStartPre=+bash -c "chmod -R 0740 /var/lib/private/hopfencloud/"
-ExecStart=/usr/local/bin/hopfencloud
-ExecReload=/usr/bin/kill -s HUP $MAINPID
-ExecStop=/usr/bin/kill -s INT $MAINPID
+ExecStart=/usr/local/bin/hopfencloud start
+ExecReload=/usr/local/bin/hopfencloud reload $MAINPID
+ExecStop=/usr/local/bin/hopfencloud stop $MAINPID
 
 Restart=always
 RestartSec=3
