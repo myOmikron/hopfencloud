@@ -6,6 +6,7 @@ import (
 	"html/template"
 	"io/fs"
 	"io/ioutil"
+	"net"
 	"os"
 	textTemplate "text/template"
 	"time"
@@ -23,7 +24,7 @@ import (
 	"github.com/pelletier/go-toml"
 )
 
-func StartServer(configPath string) {
+func StartServer(configPath string, isReloading bool) {
 	config := &conf.Config{}
 
 	if configBytes, err := ioutil.ReadFile(configPath); errors.Is(err, fs.ErrNotExist) {
@@ -99,18 +100,29 @@ func StartServer(configPath string) {
 	// Router
 	defineRoutes(e, database, config, wp, mailTemplates, settingsReloadFunc, &settings)
 
+	// Start RPC listener
+	var cliSock net.Listener
+	go initializeRPC(&cliSock, database, config, wp, mailTemplates, settingsReloadFunc, &settings, isReloading)
+
 	// Start database cleaner
 	go cleanupDatabase(database)
 
 	execution.SignalStart(e, config.Server.ListenAddress, &execution.Config{
 		ReloadFunc: func() {
-			StartServer(configPath)
+			if cliSock != nil {
+				cliSock.Close()
+			}
+			StartServer(configPath, true)
 		},
 		StopFunc: func() {
-
+			if cliSock != nil {
+				cliSock.Close()
+			}
 		},
 		TerminateFunc: func() {
-
+			if cliSock != nil {
+				cliSock.Close()
+			}
 		},
 	})
 }

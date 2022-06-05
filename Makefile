@@ -1,7 +1,6 @@
 GO_COMPILER ?= go
 GO_FLAGS ?= -ldflags=-w
 
-BINARY_NAME ?= hopfencloud
 BUILD_DIR ?= ./bin
 
 INSTALL_TARGET ?= /usr/local/bin/
@@ -13,10 +12,12 @@ SYSTEMD_DIR ?= `pkg-config systemd --variable=systemdsystemunitdir`
 all: build
 
 build:
-	$(GO_COMPILER) build $(GO_FLAGS) -o $(BUILD_DIR)/$(BINARY_NAME) cmd/hopfencloud/main.go
+	$(GO_COMPILER) build $(GO_FLAGS) -o $(BUILD_DIR)/hopfencloud cmd/hopfencloud/main.go
+	$(GO_COMPILER) build $(GO_FLAGS) -o $(BUILD_DIR)/hopfencli cmd/hopfencli/main.go
 
 install:
-	install -s -m 0755 $(BUILD_DIR)/$(BINARY_NAME) $(INSTALL_TARGET)
+	install -s -m 0755 $(BUILD_DIR)/hopfencloud $(INSTALL_TARGET)
+	install -s -m 0755 $(BUILD_DIR)/hopfencli $(INSTALL_TARGET)
 	install -m 0644 hopfencloud.service $(SYSTEMD_DIR)
 	mkdir -p /etc/hopfencloud/ /var/lib/private/hopfencloud/
 	install -m 0640 example.config.toml /etc/hopfencloud/example.config.toml
@@ -26,11 +27,11 @@ install:
 
 clean:
 	$(GO_COMPILER) clean
-	$(RM) $(BUILD_DIR)/$(BINARY_NAME)
+	$(RM) $(BUILD_DIR)/hopfencloud $(BUILD_DIR)/hopfencli
 
 uninstall:
 	systemctl stop hopfencloud.service |:
-	$(RM) $(INSTALL_TARGET)/$(BINARY_NAME) $(SYSTEMD_DIR)/hopfencloud.service
+	$(RM) $(INSTALL_TARGET)/hopfencloud $(INSTALL_TARGET)/hopfencli $(SYSTEMD_DIR)/hopfencloud.service
 	systemctl disable hopfencloud.service |:
 	systemctl daemon-reload
 

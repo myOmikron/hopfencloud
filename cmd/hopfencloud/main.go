@@ -54,7 +54,7 @@ func main() {
 
 	switch {
 	case startParser.Invoked:
-		server.StartServer(*defaultConf)
+		server.StartServer(*defaultConf, false)
 	case reloadParser.Invoked:
 		if process, err := os.FindProcess(*reloadID); err != nil {
 			fmt.Println(err.Error())
