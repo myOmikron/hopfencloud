@@ -2,6 +2,20 @@
 Description=Hopfencloud
 After=network.target
 
+###
+# Uncomment the database you are depending on
+###
+
+#Wants=mysql.service
+#After=mysql.service
+
+#Wants=mariadb.service
+#After=mariadb.service
+
+#Wants=postgresql.service
+#After=postgresql.service
+
+
 [Service]
 Type=simple
 

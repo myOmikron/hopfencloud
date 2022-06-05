@@ -6,6 +6,10 @@ Just another cloud project.
 
 Compilation and installation are managed via Makefile.
 
+If you plan on using mariadb or postgres as database backend instead of
+sqlite (which you really should!), modify `hopfencloud.service` and uncomment
+the corresponding section before executing `sudo make install`.
+
 ```bash
 # Compile the binary to bin/
 make build
