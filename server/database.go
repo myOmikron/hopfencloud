@@ -125,7 +125,6 @@ func initializeDatabase(config *conf.Config) *gorm.DB {
 		&db.Account{},
 		&db.AccountEmailVerification{},
 
-		&db.VirtualUser{},
 		&db.Group{},
 
 		&db.File{},

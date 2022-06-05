@@ -23,7 +23,7 @@ type File struct {
 
 	// Permissions
 	OwnerID        uint
-	Owner          VirtualUser     `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	OwnerType      string
 	InternalShares []InternalShare `gorm:"many2many:file__internal_shares;"`
 	ExternalShares []ExternalShare `gorm:"many2many:file__external_shares;"`
 

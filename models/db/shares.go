@@ -18,9 +18,9 @@ type ExternalShare struct {
 
 type InternalShare struct {
 	utilitymodels.Common
-	Read          bool
-	Upload        bool
-	Expired       *time.Time
-	VirtualUserID uint
-	VirtualUser   VirtualUser `gorm:"constraint:OnUpdate:CASCADE,OnDelete:CASCADE;"`
+	Read       bool
+	Upload     bool
+	Expired    *time.Time
+	TargetID   uint
+	TargetType string
 }
