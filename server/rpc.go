@@ -2,7 +2,6 @@ package server
 
 import (
 	"errors"
-	"github.com/myOmikron/echotools/worker"
 	"net"
 	"net/http"
 	"net/rpc"
@@ -14,6 +13,7 @@ import (
 	"github.com/myOmikron/hopfencloud/models/db"
 	"github.com/myOmikron/hopfencloud/modules/logger"
 
+	"github.com/myOmikron/echotools/worker"
 	"gorm.io/gorm"
 )
 
