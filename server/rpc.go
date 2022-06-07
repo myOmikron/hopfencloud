@@ -6,6 +6,7 @@ import (
 	"net"
 	"net/http"
 	"net/rpc"
+	"os"
 	"text/template"
 
 	"github.com/myOmikron/hopfencloud/handler/cli"
@@ -45,6 +46,9 @@ func initializeRPC(
 	if *sock, err = net.Listen("unix", config.Server.CLISockPath); err != nil {
 		logger.Error(err.Error())
 	} else {
+		if err := os.Chmod(config.Server.CLISockPath, 0777); err != nil {
+			logger.Error(err.Error())
+		}
 		logger.Info("Start listening on " + config.Server.CLISockPath)
 		if err := http.Serve(*sock, nil); !errors.Is(err, net.ErrClosed) {
 			logger.Error(err.Error())

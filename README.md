@@ -54,6 +54,36 @@ Removes all files created while installation and during operation
 If you are using mysql or postgres as database backend, you have to drop the
 database to remove all data. You may also want to remove the database user.
 
+## File management
+
+Files are located in the directory specified in `Files.DataPath`.
+
+Example file structure:
+```
+data/
+├─ groups/
+│  ├─ 1/
+│  │  ├─ current/
+│  │  │  ├─ Images/
+│  │  │  │  ├─ logo.svg
+│  │  │  ├─ movie.mp4
+│  │  ├─ versions/
+│  │  │  ├─ Images/
+│  │  │  │  ├─ logo.svg.1623499065
+│  │  │  │  ├─ logo.svg.1623499180
+│  │  │  │  ├─ logo.svg.1623499355
+│  ├─ 2/
+│  │  ├─ current/
+│  │  ├─ versions/
+├─ users/
+│  ├─ 1/
+│  │  ├─ current/
+│  │  ├─ versions/
+│  ├─ 2/
+│  │  ├─ current/
+│  │  ├─ versions/
+```
+
 ## Developer guidelines
 
 ### Style guidelines - go
