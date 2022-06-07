@@ -32,3 +32,7 @@ AllowedHosts = [
 # to enforce the use of https:// and add the X-Forwarded-Proto header on
 # your reverse proxy.
 UseForwardedProtoHeader = false
+
+[Files]
+# The path to the data directory
+DataPath = "data/"

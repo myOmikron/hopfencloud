@@ -21,8 +21,13 @@ type Server struct {
 	UseForwardedProtoHeader bool
 }
 
+type Files struct {
+	DataPath string
+}
+
 type Config struct {
 	Database Database
+	Files    Files
 	Server   Server
 }
 
