@@ -28,7 +28,7 @@ type File struct {
 	ExternalShares []ExternalShare `gorm:"many2many:file__external_shares;"`
 
 	// Metadata
-	Hash          string `gorm:"size:256"`
+	Hash          uint32
 	Size          uint64
 	FileCreatedAt time.Time
 	FileUpdatedAt time.Time
