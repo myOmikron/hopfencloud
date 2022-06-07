@@ -44,7 +44,14 @@ func StartServer(configPath string, isReloading bool) {
 		os.Exit(1)
 	}
 
+	// Initialize database
 	database := initializeDatabase(config)
+
+	// Setup directory structure if necessary
+	if err := initializeDirStructure(database, config); err != nil {
+		fmt.Println(err.Error())
+		os.Exit(1)
+	}
 
 	// Web server
 	e := echo.New()
