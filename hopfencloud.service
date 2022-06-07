@@ -26,6 +26,18 @@ LogsDirectory=hopfencloud
 StateDirectory=hopfencloud
 ConfigurationDirectory=hopfencloud
 
+MemoryDenyWriteExecute=yes
+RestrictAddressFamilies=AF_INET AF_INET6 AF_UNIX
+RestrictRealtime=yes
+RestrictNamespaces=~user
+InaccessiblePaths=/boot
+UMask=0177
+PrivateDevices=yes
+CapabilityBoundingSet=~CAP_SYS_TIME
+ProtectClock=yes
+PrivateUsers=yes
+SystemCallFilter=@system-service
+
 WorkingDirectory=/var/lib/private/hopfencloud/
 ExecStartPre=+bash -c "chown -R :$(stat -c %%g /run/hopfencloud) /etc/hopfencloud/config.toml"
 ExecStartPre=+bash -c "chown -R $(stat -c %%u /run/hopfencloud):$(stat -c %%g /run/hopfencloud) /var/lib/private/hopfencloud"
