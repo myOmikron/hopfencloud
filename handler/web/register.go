@@ -2,11 +2,13 @@ package web
 
 import (
 	"net/mail"
+	"os"
 
 	"github.com/myOmikron/hopfencloud/models/db"
 	"github.com/myOmikron/hopfencloud/modules/crypt"
 	"github.com/myOmikron/hopfencloud/modules/logger"
 	"github.com/myOmikron/hopfencloud/modules/tasks"
+	"github.com/myOmikron/hopfencloud/modules/utils"
 
 	"github.com/labstack/echo/v4"
 	"github.com/myOmikron/echotools/database"
@@ -114,6 +116,15 @@ func (w *Wrapper) RegisterPost(c echo.Context) error {
 	})
 
 	w.WorkerPool.AddTask(tasks.SendRegistrationMail(address.Address, req.Username, token, w.Settings, w.MailTemplates))
+
+	// Create directory structure for user
+	if err := os.MkdirAll(utils.GetUserCurrentPath(account.ID, w.Config), 0700); err != nil {
+		return err
+	}
+
+	if err := os.MkdirAll(utils.GetUserVersionsPath(account.ID, w.Config), 0700); err != nil {
+		return err
+	}
 
 	//TODO: Render prettier template
 	return c.String(200, "Account created, email must be confirmed before you can login")
