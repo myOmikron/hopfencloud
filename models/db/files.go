@@ -8,14 +8,14 @@ import (
 
 type FileVersion struct {
 	utilitymodels.Common
-	Path              string `gorm:"size:4096"`
+	Path              string `gorm:"size:4096"` // This only holds the path relative to the user's version directory
 	FileRelevantUntil time.Time
 }
 
 type File struct {
 	utilitymodels.Common
 	Name         string        `gorm:"size:256"`
-	Path         string        `gorm:"size:4096"`
+	Path         string        `gorm:"size:4096"` // This only holds the path relative to the user's data directory
 	FileVersions []FileVersion `gorm:"many2many:file__file_versions;"`
 	IsDirectory  bool
 	ParentID     *uint
