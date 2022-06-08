@@ -71,5 +71,7 @@ func defineRoutes(
 	e.GET("/verify_email", webWrapper.VerifyEmailGet)
 	e.POST("/verify_email", webWrapper.VerifyEmailPost)
 
+	e.POST("/upload", loginRequired(webWrapper.UploadPost))
+
 	e.Static("/static/", "static/")
 }
