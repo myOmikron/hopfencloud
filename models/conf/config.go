@@ -17,6 +17,7 @@ type Database struct {
 
 type AllowedHost struct {
 	Host  string
+	Port  uint16
 	Https bool
 }
 

@@ -8,6 +8,7 @@ import (
 	"io/ioutil"
 	"net"
 	"os"
+	"strconv"
 	textTemplate "text/template"
 	"time"
 
@@ -86,8 +87,12 @@ func StartServer(configPath string, isReloading bool) {
 
 	allowedHosts := make([]middleware.AllowedHost, 0)
 	for _, host := range config.Server.AllowedHosts {
+		hostPortCombination := host.Host
+		if host.Port != 80 && host.Port != 443 {
+			hostPortCombination = net.JoinHostPort(host.Host, strconv.Itoa(int(host.Port)))
+		}
 		allowedHosts = append(allowedHosts, middleware.AllowedHost{
-			Host:  host.Host,
+			Host:  hostPortCombination,
 			Https: host.Https,
 		})
 	}

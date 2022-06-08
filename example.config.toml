@@ -16,22 +16,21 @@ User = "hopfencloud"
 Password = ""
 
 [Server]
-# Path to the socket file used by hopfencli to send commands to the server.
-# If using the provided service file, there should be no need to change this.
-CLISockPath = "/run/hopfencloud/cli.sock"
 ListenAddress = "127.0.0.1:8080"
 # List of allowed host, port, protocol combination,
 # the server can be accessed by.
-#
-# Note: If using port 80 or 443, the port can be omitted
 AllowedHosts = [
-    {Host = "127.0.0.1", Https = true}
+    {Host = "127.0.0.1", Port = 80, Https = false},
+    {Host = "hopfencloud.example.org", Port = 443, Https = true},
 ]
 # You can set this to true, if hopfencloud is deployed behin a reverse proxy
 # and therefore has no TLS configured. You can still set your AllowedHosts
 # to enforce the use of https:// and add the X-Forwarded-Proto header on
 # your reverse proxy.
 UseForwardedProtoHeader = false
+# Path to the socket file used by hopfencli to send commands to the server.
+# If using the provided service file, there should be no need to change this.
+CLISockPath = "/run/hopfencloud/cli.sock"
 # Limit of the maximum size of files that can be uploaded.
 # Valid specifiers: K, M, G, T or P.
 #
