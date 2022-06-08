@@ -25,6 +25,7 @@ type Server struct {
 	ListenAddress           string
 	AllowedHosts            []*AllowedHost
 	UseForwardedProtoHeader bool
+	MaxFileUpload           string
 }
 
 type Files struct {

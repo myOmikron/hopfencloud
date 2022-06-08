@@ -76,6 +76,7 @@ func StartServer(configPath string, isReloading bool) {
 		Format: "${time_rfc3339} :: ${status} ${method} ${uri} :: ${latency_human} ${error}\n",
 	}))
 	e.Use(mw.Recover())
+	e.Use(mw.BodyLimit(config.Server.MaxFileUpload))
 
 	duration := time.Hour * 24
 	e.Use(middleware.Session(database, &middleware.SessionConfig{

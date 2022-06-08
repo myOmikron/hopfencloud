@@ -32,6 +32,14 @@ AllowedHosts = [
 # to enforce the use of https:// and add the X-Forwarded-Proto header on
 # your reverse proxy.
 UseForwardedProtoHeader = false
+# Limit of the maximum size of files that can be uploaded.
+# Valid specifiers: K, M, G, T or P.
+#
+# Note:
+#  Check the size of your tmp partition!
+#  E.g.: MaxFileUpload is set to 2G, up to 10 simultaneous can be expected:
+#  10 * 2G: Your tmp partition must hold at least 20G!
+MaxFileUpload = "20M"
 
 [Files]
 # The path to the data directory
