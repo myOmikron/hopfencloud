@@ -26,6 +26,8 @@ import (
 // - Removed sessions when the linked user doesn't exist anymore
 //TODO:
 // - Remove users if the linked localUser / ldapUser doesn't exist anymore
+// - Remove files, if the linked account / group was deleted
+// - Remove internal shares if the linked account was deleted
 func cleanupDatabase(db *gorm.DB) {
 	var start time.Time
 	for {
