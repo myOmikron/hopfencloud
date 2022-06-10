@@ -71,6 +71,12 @@ func defineRoutes(
 	e.GET("/verify_email", webWrapper.VerifyEmailGet)
 	e.POST("/verify_email", webWrapper.VerifyEmailPost)
 
+	e.GET("/", func(c echo.Context) error {
+		return c.Redirect(302, "/files")
+	})
+
+	e.GET("/files", loginRequired(webWrapper.Files))
+
 	e.POST("/upload", loginRequired(webWrapper.UploadPost))
 
 	e.Static("/static/", "static/")

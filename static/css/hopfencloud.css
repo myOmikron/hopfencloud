@@ -1,13 +1,14 @@
 :root {
+    --level--1: #13151c;
     --level-0: #1e212c;
     --level-1: #292d3b;
     --level-2: #323648;
     --level-3: #41475e;
     --level-4: #515977;
     --disabled: #4f5360;
-    --primary: #8a0808;
+    --primary: #ac00d3;
     --primary-hover: #6e0707;
-    --text-dark: #ccc;
+    --text-dark: #bbb;
     --text: #eee;
 }
 
@@ -22,17 +23,27 @@ body {
     filter: invert(100%);
 }
 
+.hidden {
+    display: none;
+}
+
 .heading {
     margin: 0;
 }
 
+.dark {
+    color: var(--text-dark);
+}
+
 .button {
     cursor: pointer;
-    padding: 0.5rem;
+    font-size: small;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
     border: 1px solid var(--level-4);
     background-color: var(--level-2);
     color: var(--text);
     transition: all ease-in-out 200ms;
+    border-radius: 4px;
 }
 
 .button:hover {
@@ -63,17 +74,37 @@ body {
     color: var(--text);
 }
 
+.file::file-selector-button,
+.file::-webkit-file-upload-button {
+    font-size: small;
+    cursor: pointer;
+    padding: 0.25rem 0.5rem 0.25rem 0.5rem;
+    border: 1px solid var(--level-4);
+    background-color: var(--level-2);
+    color: var(--text);
+    transition: all ease-in-out 200ms;
+    border-radius: 4px;
+}
+
+.file {}
+
+.file:hover::file-selector-button,
+.file:hover::-webkit-file-upload-button {
+    background-color: var(--level-3);
+}
+
 /*
 Menu declaration
  */
 
 .topbar {
-    height: 4em;
+    height: 3.5em;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
-    background-color: var(--primary);
+    background-color: var(--level-1);
+    border-bottom: 1px solid var(--level-3);
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -103,6 +134,15 @@ Menu declaration
 .topbarBar {
     display: flex;
     height: 100%;
+}
+
+.sidebar {
+    position: fixed;
+    height: calc(100% - 3.5rem);
+    top: 3.5rem;
+    left: 0;
+    width: 20rem;
+    border-right: 1px solid var(--level-3);
 }
 
 /*
@@ -254,3 +294,71 @@ Verify Email declaration
     padding: 2rem;
     height: fit-content;
 }
+
+/*
+Files declaration
+ */
+
+.uploadForm {
+    padding: 1rem;
+    overflow: clip;
+    border-bottom: 1px solid var(--level-3);
+    text-align: center;
+}
+
+.uploadForm button {
+    margin-top: 1rem;
+}
+
+.dropzone {
+    cursor: pointer;
+    border-radius: 0.5rem;
+    min-height: 3rem;
+    max-height: 15rem;
+    border: 3px dotted var(--level-2);
+    padding: 1rem;
+    overflow-y: scroll;
+}
+
+.dropzone:hover,
+.dropActive {
+    border: 3px dotted var(--level-3);
+}
+
+.dropzone-fl {
+    list-style: none;
+    padding: 0;
+}
+
+.dropzone-fl li {
+    margin-top: 0.25rem;
+    overflow-wrap: anywhere;
+}
+
+.dropzone-progress-border {
+    background-color: var(--level--1);
+    border: 1px solid var(--level-3);
+    border-radius: 4px;
+    height: 0.5rem;
+    width: 100%;
+}
+
+.dropzone-progress {
+    height: 100%;
+    width: 0;
+    background-color: var(--primary);
+}
+
+.content {
+    margin-left: 20rem;
+    margin-top: 3.5rem;
+    display: flex;
+    padding: 1rem;
+}
+
+.fileTable {
+    width: 80%;
+    border-collapse: collapse;
+    text-align: left;
+}
+

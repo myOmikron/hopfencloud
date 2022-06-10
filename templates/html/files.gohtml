@@ -1,0 +1,34 @@
+{{define "files"}}
+{{template "base/head" .}}
+    <div class="topbar">
+
+    </div>
+    <div class="sidebar">
+        <div class="uploadForm">
+            <div class="dropzone" id="dropzone">
+                <p class="dark">Drop files here</p>
+                <ul class="dropzone-fl" id="dropzone-fl"></ul>
+                <input autocomplete="off" class="hidden" id="dropzone-fs" type="file" multiple>
+            </div>
+            <button class="button" id="dropzone-upload">Upload</button>
+        </div>
+    </div>
+    <div class="content">
+        <table class="fileTable">
+            <tr>
+                <th>Filename</th>
+                <th>Size</th>
+                <th>Modified</th>
+            </tr>
+            {{range .Files}}
+                <tr>
+                    <td>{{.Name}}</td>
+                    <td>{{.Size}}</td>
+                    <td>{{.LastModified}}</td>
+                </tr>
+            {{end}}
+        </table>
+    </div>
+    <script src="/static/js/files.js" defer></script>
+{{template "base/footer" .}}
+{{end}}
