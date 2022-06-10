@@ -16,6 +16,7 @@ type Account struct {
 	utilitymodels.Common
 	AuthID         uint
 	AuthKey        string          `gorm:"size:256"`
+	IsAdmin        bool            `gorm:"default:false"`
 	Files          []File          `gorm:"polymorphic:Owner"`
 	InternalShares []InternalShare `gorm:"polymorphic:Target;"`
 }

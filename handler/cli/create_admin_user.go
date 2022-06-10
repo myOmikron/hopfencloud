@@ -76,6 +76,7 @@ func (c *CLI) CreateAdminUser(req CreateAdminUserRequest, res *CreateAdminUserRe
 	account := db.Account{
 		AuthID:  localUser.ID,
 		AuthKey: "local",
+		IsAdmin: true,
 	}
 	c.DB.Create(&account)
 
