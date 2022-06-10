@@ -7,7 +7,7 @@ require (
 	github.com/hellflame/argparse v1.8.0
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
 	github.com/labstack/echo/v4 v4.7.2
-	github.com/myOmikron/echotools v0.6.2
+	github.com/myOmikron/echotools v0.7.0
 	github.com/pelletier/go-toml v1.9.5
 	golang.org/x/term v0.0.0-20210927222741-03fcf44c2211
 	gorm.io/driver/mysql v1.3.4
