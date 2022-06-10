@@ -82,26 +82,14 @@ func (w *Wrapper) UploadPost(c echo.Context) error {
 	}
 	defer src.Close()
 
-	// Create temp file
-	temp, err := os.CreateTemp("", file.Filename+"*")
-	if err != nil {
-		return err
-	}
-	defer os.Remove(temp.Name())
-
-	// Write to temp file
-	if _, err = io.Copy(temp, src); err != nil {
-		return err
-	}
-
 	// Calculate checksum
 	checksum := adler32.New()
-	if _, err := io.Copy(checksum, temp); err != nil {
+	if _, err := io.Copy(checksum, src); err != nil {
 		logger.Error(err.Error())
 		//TODO: Display error message
 		return c.String(500, "Internal server error")
 	}
-	if _, err := temp.Seek(0, 0); err != nil {
+	if _, err := src.Seek(0, 0); err != nil {
 		logger.Error(err.Error())
 		//TODO: Display error message
 		return c.String(500, "Internal server error")
@@ -130,7 +118,7 @@ func (w *Wrapper) UploadPost(c echo.Context) error {
 		}
 		defer newFile.Close()
 
-		if _, err := io.Copy(newFile, temp); err != nil {
+		if _, err := io.Copy(newFile, src); err != nil {
 			logger.Error(err.Error())
 			//TODO: Display error message
 			return c.String(500, "Internal server error")
@@ -168,7 +156,7 @@ func (w *Wrapper) UploadPost(c echo.Context) error {
 		}
 		defer newFile.Close()
 
-		if _, err := io.Copy(newFile, temp); err != nil {
+		if _, err := io.Copy(newFile, src); err != nil {
 			logger.Error(err.Error())
 			//TODO: Display error message
 			return c.String(500, "Internal server error")
@@ -188,5 +176,5 @@ func (w *Wrapper) UploadPost(c echo.Context) error {
 		})
 	}
 
-	return c.Redirect(302, c.Request().Header.Get("Referer"))
+	return c.String(200, "ok")
 }
