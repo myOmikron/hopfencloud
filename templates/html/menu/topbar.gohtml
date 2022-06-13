@@ -1,0 +1,14 @@
+{{define "menu/topbar"}}
+    <div class="topbar">
+        <a class="topbarItem" href="/files">
+            <img class="invert" src="/static/img/network.svg" alt="home icon">
+        </a>
+        <div class="topbarBar">
+            <a class="topbarItem" href="/account">Account</a>
+        {{if .IsAdmin}}
+            <a class="topbarItem" href="/admin">Administration</a>
+        {{end}}
+            <a class="topbarItem" href="/logout">Logout</a>
+        </div>
+    </div>
+{{end}}

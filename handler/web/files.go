@@ -24,6 +24,7 @@ type File struct {
 
 type FileData struct {
 	PageTitle          string
+	IsAdmin            bool
 	CurrentDirectoryID string
 	Files              []File
 }
@@ -78,6 +79,7 @@ func (w *Wrapper) Files(c echo.Context) error {
 	}
 	return c.Render(200, "files", &FileData{
 		PageTitle:          "Files - " + w.Settings.SiteName,
+		IsAdmin:            account.IsAdmin,
 		Files:              files,
 		CurrentDirectoryID: current,
 	})
