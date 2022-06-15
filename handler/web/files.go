@@ -1,7 +1,7 @@
 package web
 
 import (
-	"strconv"
+	"github.com/myOmikron/hopfencloud/models/db"
 	"time"
 
 	"github.com/myOmikron/hopfencloud/modules/utils"
@@ -22,11 +22,20 @@ type File struct {
 	IsDirectory  bool
 }
 
+type PathEntry struct {
+	ID       uint
+	Path     string
+	ParentID *uint
+	Name     string
+}
+
 type FileData struct {
 	PageTitle          string
 	IsAdmin            bool
-	CurrentDirectoryID string
+	CurrentDirectoryID int
+	ParentDirectoryID  int
 	Files              []File
+	Path               []PathEntry
 }
 
 func (w *Wrapper) Files(c echo.Context) error {
@@ -55,32 +64,77 @@ func (w *Wrapper) Files(c echo.Context) error {
 		map[string]interface{}{
 			"parent_id": query.Dir,
 		},
-	).Preload(
-		"InternalShares",
-		func(db *gorm.DB) *gorm.DB {
-			return db.Select("id", "target_id", "target_type")
-		},
-	).Find(&account)
+	).
+		Preload(
+			"InternalShares",
+			func(db *gorm.DB) *gorm.DB {
+				return db.Select("id", "target_id", "target_type")
+			},
+		).Find(&account)
 
-	files := make([]File, len(account.Files))
+	directories := make([]File, 0)
+	files := make([]File, 0)
 	for _, file := range account.Files {
-		files = append(files, File{
-			ID:           file.ID,
-			Name:         file.Name,
-			Size:         utils.ByteCountDecimal(file.Size),
-			LastModified: file.FileUpdatedAt.Format(time.RFC1123Z),
-			IsDirectory:  file.IsDirectory,
-		})
+		if file.IsDirectory {
+			directories = append(directories, File{
+				ID:          file.ID,
+				Name:        file.Name,
+				IsDirectory: true,
+			})
+		} else {
+			files = append(files, File{
+				ID:           file.ID,
+				Name:         file.Name,
+				Size:         utils.ByteCountDecimal(file.Size),
+				LastModified: file.FileUpdatedAt.Format(time.RFC1123Z),
+				IsDirectory:  file.IsDirectory,
+			})
+		}
 	}
 
-	var current string
+	var current int
+	var parent int
+	path := make([]PathEntry, 0)
+
 	if query.Dir != nil {
-		current = strconv.Itoa(int(*query.Dir))
+		current = int(*query.Dir)
+		var currentDirectory db.File
+		if query.Dir != nil {
+			w.DB.Select("parent_id", "path").Find(&currentDirectory, "id = ?", *query.Dir)
+		}
+		if currentDirectory.ParentID != nil {
+			parent = int(*currentDirectory.ParentID)
+		} else {
+			parent = -1
+		}
+
+		w.DB.Raw(`with recursive tree as (
+						select id, parent_id, path, name
+						from files
+						where id = ?
+						union all
+						select f.id, f.parent_id, f.path, f.name
+						from files as f
+						join tree as parent on parent.parent_id = f.id
+					)
+					select *
+					from tree;`, *query.Dir).Scan(&path)
+
+		for i, j := 0, len(path)-1; i < j; i, j = i+1, j-1 {
+			path[i], path[j] = path[j], path[i]
+		}
+
+	} else {
+		current = -1
+		parent = -1
 	}
+
 	return c.Render(200, "files", &FileData{
 		PageTitle:          "Files - " + w.Settings.SiteName,
 		IsAdmin:            account.IsAdmin,
-		Files:              files,
+		Files:              append(directories, files...),
+		Path:               path,
 		CurrentDirectoryID: current,
+		ParentDirectoryID:  parent,
 	})
 }

@@ -1,4 +1,23 @@
 
+function downloadFile(fileID) {
+    let url = new URL(window.location.toString());
+    url.pathname = "/download";
+    url.searchParams.set("id", fileID);
+    let link = document.createElement("a");
+    link.href = url.toString();
+    link.click();
+}
+
+function changeDirectory(directoryID) {
+    let url = new URL(window.location.toString());
+    if (directoryID !== undefined) {
+        url.searchParams.set("dir", directoryID);
+    } else {
+        url.searchParams.delete("dir");
+    }
+    window.location.assign(url);
+}
+
 function sendFile(file, progressFunc, loadFunc) {
     let data = new FormData();
     data.append('file', file);
