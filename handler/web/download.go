@@ -2,14 +2,15 @@ package web
 
 import (
 	"archive/zip"
-	"github.com/myOmikron/hopfencloud/models/db"
-	"github.com/myOmikron/hopfencloud/modules/logger"
-	"github.com/myOmikron/hopfencloud/modules/utils"
 	"io"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"strings"
+
+	"github.com/myOmikron/hopfencloud/models/db"
+	"github.com/myOmikron/hopfencloud/modules/logger"
+	"github.com/myOmikron/hopfencloud/modules/utils"
 
 	"github.com/labstack/echo/v4"
 )
