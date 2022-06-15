@@ -105,5 +105,7 @@ func defineRoutes(
 
 	e.POST("/upload", loginRequired(webWrapper.UploadPost))
 
+	e.GET("/download", loginRequired(webWrapper.Download))
+
 	e.Static("/static/", "static/")
 }
