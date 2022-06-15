@@ -6,6 +6,7 @@ import (
 	"github.com/myOmikron/hopfencloud/handler/web"
 	"github.com/myOmikron/hopfencloud/models/conf"
 	"github.com/myOmikron/hopfencloud/models/db"
+	"github.com/myOmikron/hopfencloud/modules/utils"
 
 	"github.com/labstack/echo/v4"
 	"github.com/myOmikron/echotools/middleware"
@@ -37,6 +38,31 @@ func unauthenticatedOnly(f func(c echo.Context) error) echo.HandlerFunc {
 
 		if sessionContext.IsAuthenticated() {
 			return c.Redirect(302, "/")
+		}
+
+		return f(c)
+	}
+}
+
+func adminOnly(dbase *gorm.DB, f func(c echo.Context) error) echo.HandlerFunc {
+	return func(c echo.Context) error {
+		sessionContext, err := middleware.GetSessionContext(c)
+		if err != nil {
+			return err
+		}
+
+		if !sessionContext.IsAuthenticated() {
+			return c.Redirect(302, "/login?redirect_to="+c.Path())
+		}
+
+		user, err := utils.GetAccount(c, dbase)
+		if err != nil {
+			return err
+		}
+
+		if !user.IsAdmin {
+			// TODO: Render better template
+			return c.String(401, "Unauthorized")
 		}
 
 		return f(c)
