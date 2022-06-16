@@ -3,9 +3,11 @@ package cli
 import (
 	"errors"
 	"net/mail"
+	"os"
 
 	"github.com/myOmikron/hopfencloud/models/db"
 	"github.com/myOmikron/hopfencloud/modules/logger"
+	"github.com/myOmikron/hopfencloud/modules/utils"
 
 	"github.com/myOmikron/echotools/database"
 	"github.com/myOmikron/echotools/utilitymodels"
@@ -79,6 +81,15 @@ func (c *CLI) CreateAdminUser(req CreateAdminUserRequest, res *CreateAdminUserRe
 		IsAdmin: true,
 	}
 	c.DB.Create(&account)
+
+	// Create directory structure for user
+	if err := os.MkdirAll(utils.GetUserCurrentPath(account.ID, c.Config), 0700); err != nil {
+		return err
+	}
+
+	if err := os.MkdirAll(utils.GetUserVersionsPath(account.ID, c.Config), 0700); err != nil {
+		return err
+	}
 
 	return nil
 }
