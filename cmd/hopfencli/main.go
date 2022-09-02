@@ -20,6 +20,15 @@ func main() {
 
 	createAdminUserArgs, createAdminUserParser := cli.RegisterCreateAdminUser(parser)
 
+	settingsParser := parser.AddCommand("settings", "Configure and show server settings", nil)
+	settingsShowParser := settingsParser.AddCommand(
+		"show",
+		"Show the current settings",
+		&argparse.ParserConfig{
+			DisableDefaultShowHelp: true,
+		},
+	)
+
 	if err := parser.Parse(nil); err != nil {
 		color.Println(color.RED, err.Error())
 		os.Exit(1)
@@ -28,6 +37,10 @@ func main() {
 	switch {
 	case createAdminUserParser.Invoked:
 		cli.CreateAdminUser(*sockPath, createAdminUserArgs)
+	case settingsParser.Invoked:
+		settingsParser.PrintHelp()
+	case settingsShowParser.Invoked:
+		cli.SettingsShow(*sockPath, &cli.SettingsCLI{})
 	default:
 		parser.PrintHelp()
 	}

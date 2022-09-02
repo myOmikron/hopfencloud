@@ -43,3 +43,7 @@ MaxFileUpload = "20M"
 [Files]
 # The path to the data directory
 DataPath = "data/"
+# Specifies the interval in minutes in which the versioned file cleaner is
+# invoked. Depending on your retention settings it can make sense to
+# change this interval.
+VersionedFileCleanerInterval = 60

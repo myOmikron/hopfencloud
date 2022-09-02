@@ -107,5 +107,8 @@ func defineRoutes(
 
 	e.GET("/download", loginRequired(webWrapper.Download))
 
+	e.GET("/admin", adminOnly(db, webWrapper.SettingsGeneral))
+	e.GET("/admin/mail", adminOnly(db, webWrapper.SettingsMail))
+
 	e.Static("/static/", "static/")
 }

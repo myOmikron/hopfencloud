@@ -87,7 +87,7 @@ func cleanupDatabase(db *gorm.DB) {
 		}
 
 		// Cleanup
-		logger.Infof("Cleanup took %s", time.Now().Sub(start).String())
+		logger.Infof("Database cleanup took %s", time.Now().Sub(start).String())
 
 		// Sleeping
 		time.Sleep(time.Minute * 5)
@@ -141,7 +141,9 @@ func initializeDatabase(config *conf.Config) *gorm.DB {
 	dbase.Find(&db.Settings{}).Count(&count)
 	if count == 0 {
 		dbase.Create(&db.Settings{
-			SiteName: "Hopfencloud",
+			SiteName:                  "Hopfencloud",
+			LocalRegistrationDisabled: true,
+			VersioningKeepLast:        1,
 		})
 	}
 

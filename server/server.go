@@ -67,7 +67,7 @@ func StartServer(configPath string, isReloading bool) {
 
 	// Template rendering
 	renderer := &TemplateRenderer{
-		templates: template.Must(template.ParseFS(os.DirFS("templates/html/"), "*/*.gohtml")),
+		templates: template.Must(template.ParseFS(os.DirFS("templates/html/"), "*.gohtml", "*/*.gohtml")),
 	}
 	e.Renderer = renderer
 	mailTemplates := textTemplate.Must(textTemplate.ParseFS(os.DirFS("templates/mail/"), "*.gotxt"))
@@ -119,6 +119,9 @@ func StartServer(configPath string, isReloading bool) {
 
 	// Start database cleaner
 	go cleanupDatabase(database)
+
+	// Start versioning cleaner
+	//go cleanupVersionedFiles(database, config, &settings)
 
 	execution.SignalStart(e, config.Server.ListenAddress, &execution.Config{
 		ReloadFunc: func() {

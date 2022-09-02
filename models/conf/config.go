@@ -30,7 +30,8 @@ type Server struct {
 }
 
 type Files struct {
-	DataPath string
+	DataPath                     string
+	VersionedFileCleanerInterval uint
 }
 
 type Config struct {

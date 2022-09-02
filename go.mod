@@ -6,6 +6,7 @@ require (
 	github.com/go-sql-driver/mysql v1.6.0
 	github.com/hellflame/argparse v1.8.0
 	github.com/jordan-wright/email v4.0.1-0.20210109023952-943e75fe5223+incompatible
+	github.com/json-iterator/go v1.1.12
 	github.com/labstack/echo/v4 v4.7.2
 	github.com/myOmikron/echotools v0.7.0
 	github.com/pelletier/go-toml v1.9.5
@@ -32,6 +33,8 @@ require (
 	github.com/mattn/go-colorable v0.1.12 // indirect
 	github.com/mattn/go-isatty v0.0.14 // indirect
 	github.com/mattn/go-sqlite3 v1.14.13 // indirect
+	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
+	github.com/modern-go/reflect2 v1.0.2 // indirect
 	github.com/pkg/errors v0.9.1 // indirect
 	github.com/stretchr/testify v1.7.1 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect

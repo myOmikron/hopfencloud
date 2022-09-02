@@ -19,4 +19,14 @@ type Settings struct {
 	SMTPPort     uint16 `json:"smtp_port"`
 	SMTPUser     string `gorm:"size:256" json:"smtp_user"`
 	SMTPPassword string `gorm:"size:256" json:"smtp_password"`
+
+	//Version cleaner settings
+	VersioningDisabled    bool  `json:"versioning_disabled"`
+	VersioningKeepAll     bool  `json:"versioning_keep_all"`
+	VersioningKeepLast    uint  `json:"versioning_keep_last"`
+	VersioningKeepHourly  *uint `json:"versioning_keep_hourly"`
+	VersioningKeepDaily   *uint `json:"versioning_keep_daily"`
+	VersioningKeepWeekly  *uint `json:"versioning_keep_weekly"`
+	VersioningKeepMonthly *uint `json:"versioning_keep_monthly"`
+	VersioningKeepYearly  *uint `json:"versioning_keep_yearly"`
 }
