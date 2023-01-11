@@ -2,7 +2,7 @@ FROM rust AS build
 WORKDIR /opt/hopfencloud/
 
 # Install rorm-cli
-RUN cargo install rorm-cli --version 0.5.0
+RUN cargo install rorm-cli --version 0.5.0 --root .
 
 # For caching target/
 RUN cargo init
@@ -16,6 +16,9 @@ COPY . ./
 RUN cargo build -r
 
 FROM debian
+
+# Copy rorm-cli
+COPY --from=build /opt/hopfencloud/rorm-cli ./
 
 # Copy binary
 COPY --from=build /opt/hopfencloud/target/release/hopfencloud ./

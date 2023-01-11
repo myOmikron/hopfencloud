@@ -1,7 +1,10 @@
 .idea/
 
+node_modules/
 Cargo.lock
 target/
+package-lock.json
 
+*.sqlite3
 .models.json
 config.toml
