@@ -1,0 +1,37 @@
+[package]
+name = "hopfencloud"
+version = "0.1.0"
+edition = "2021"
+authors = ["Niklas Pfister <git@omikron.dev>"]
+license = "AGPL"
+repository = "https://github.com/myOmikron/hopfencloud"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# Webframework
+actix-web = { version = "~4.2" }
+# Middleware and helper functions for actix
+actix-toolbox = { version = "~0.8", features = ["logging", "session"] }
+
+# Logging facade
+log = { version = "~0.4" }
+
+# CLI parser
+clap = { version = "~4.0", features = ["derive"] }
+
+# ORM
+rorm = { version = "~0.4", features = ["tokio-rustls"] }
+
+# Serialization library
+serde = { version = "~1.0", features = ["derive"] }
+# Toml parser for serde
+toml = { version = "~0.5" }
+# Base64 encoder and decoder
+base64 = { version = "~0.21" }
+
+# Async runtime
+tokio = { version = "~1.24", features = ["macros", "rt-multi-thread", "sync"] }
+
+[features]
+rorm-main = []
