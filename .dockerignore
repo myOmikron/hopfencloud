@@ -1,7 +1,0 @@
-target/
-config.toml
-Cargo.lock
-example.config.toml
-Makefile.toml
-.gitignore
-*.sqlite3

@@ -1,7 +1,6 @@
 .idea/
 
 node_modules/
-Cargo.lock
 target/
 package-lock.json
 
