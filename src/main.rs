@@ -41,23 +41,18 @@ mod server;
 #[derive(Subcommand)]
 #[clap(version)]
 pub(crate) enum Command {
-    Start {
-        #[clap(long = "config-path")]
-        #[clap(default_value_t = String::from("/etc/hopfencloud/config.toml"))]
-        #[clap(help = "Path to the configuration file")]
-        config_path: String,
-    },
-    GenKey,
-    CreateAdminUser {
-        #[clap(long = "config-path")]
-        #[clap(default_value_t = String::from("/etc/hopfencloud/config.toml"))]
-        #[clap(help = "Path to the configuration file")]
-        config_path: String,
-    },
+    Start,
+    Keygen,
+    CreateAdminUser,
 }
 
 #[derive(Parser)]
 pub(crate) struct Cli {
+    #[clap(long = "config-path")]
+    #[clap(default_value_t = String::from("/etc/hopfencloud/config.toml"))]
+    #[clap(help = "Path to the configuration file")]
+    config_path: String,
+
     #[clap(subcommand)]
     command: Command,
 }
@@ -67,24 +62,22 @@ pub(crate) struct Cli {
 async fn main() -> Result<(), String> {
     let cli = Cli::parse();
 
-    match cli.command {
-        Command::Start { config_path } => {
-            let config = read_config(&config_path)?;
-            setup_logging(&config.logging)?;
-            let db = init_db(&config).await?;
+    let config = read_config(&cli.config_path)?;
+    setup_logging(&config.logging)?;
+    let db = init_db(&config).await?;
 
-            start_server(&config, db).await?;
+    match cli.command {
+        Command::Start => {
+            start_server(&config, db)
+                .await
+                .map_err(|e| format!("{e}"))?;
         }
-        Command::GenKey => {
+        Command::Keygen => {
             let key = Key::generate();
             let encoded = BASE64_STANDARD.encode(key.master());
-            println!("{}", &encoded);
+            println!("{encoded}");
         }
-        Command::CreateAdminUser { config_path } => {
-            let config = read_config(&config_path)?;
-            setup_logging(&config.logging)?;
-            let db = init_db(&config).await?;
-
+        Command::CreateAdminUser => {
             let stdin = io::stdin();
             let mut stdout = io::stdout();
 

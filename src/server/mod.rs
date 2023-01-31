@@ -7,29 +7,26 @@ use actix_web::web::{get, post, Data, JsonConfig, PayloadConfig};
 use actix_web::{App, HttpServer};
 use base64::prelude::BASE64_STANDARD;
 use base64::Engine;
-use log::info;
 use rorm::Database;
 
 use crate::config::Config;
 use crate::handler::api;
-use crate::server::error::ServerError;
+use crate::server::error::ServerStartError;
 
 mod error;
 
 /**
 Starts the server
 */
-pub(crate) async fn start_server(config: &Config, database: Database) -> Result<(), ServerError> {
+pub(crate) async fn start_server(
+    config: &Config,
+    database: Database,
+) -> Result<(), ServerStartError> {
     let key = Key::try_from(
         BASE64_STANDARD
             .decode(&config.server.secret_key)?
             .as_slice(),
     )?;
-
-    info!(
-        "Starting to listen on http://{}:{}",
-        &config.server.listen_address, config.server.listen_port
-    );
 
     HttpServer::new(move || {
         App::new()
