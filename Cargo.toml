@@ -15,11 +15,11 @@ repository = "https://github.com/myOmikron/hopfencloud"
 
 [dependencies]
 # Webframework
-actix-web = { version = "~4.2" }
+actix-web = { version = "~4" }
 # Middleware and helper functions for actix
-actix-toolbox = { version = "~0.8", features = ["logging", "session"] }
+actix-toolbox = { version = "~0.8", features = ["logging", "session", "ws"] }
 # Webauthn library
-webauthn-rs = { version = "~0.4" }
+webauthn-rs = { version = "~0.4", features = ["danger-allow-state-serialisation"] }
 
 # Argon hash provider
 argon2 = { version = "~0.4" }
@@ -28,25 +28,28 @@ argon2 = { version = "~0.4" }
 log = { version = "~0.4" }
 
 # CLI parser
-clap = { version = "~4.0", features = ["derive"] }
+clap = { version = "~4", features = ["derive"] }
 # Secure password input
-rpassword = { version = "~7.2" }
+rpassword = { version = "~7" }
 
 # ORM
 rorm = { version = "~0.4", features = ["tokio-rustls"] }
 
 # Serialization library
-serde = { version = "~1.0", features = ["derive"] }
+serde = { version = "~1", features = ["derive"] }
 serde_repr = { version = "~0.1" }
 # Toml parser for serde
-toml = { version = "~0.5" }
+toml = { version = "~0.7" }
 # Base64 encoder and decoder
 base64 = { version = "~0.21" }
 # Time library
 chrono = { version = "~0.4" }
+# Bytes abstractions
+bytes = { version = "~1" }
 
 # Async runtime
-tokio = { version = "~1.24", features = ["macros", "rt-multi-thread", "sync"] }
+tokio = { version = "~1", features = ["macros", "rt-multi-thread", "sync"] }
+futures = { version = "~0.3" }
 
 [features]
 rorm-main = []
