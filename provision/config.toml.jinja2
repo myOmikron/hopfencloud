@@ -1,0 +1,29 @@
+[Server]
+ListenAddress = "127.0.0.1"
+ListenPort = 8080
+SecretKey = "{{ secret_key }}"
+OriginUri = "{{ origin_uri }}"
+OriginName = "{{ origin_name }}"
+
+[Database]
+# Only used by rorm-cli
+Driver = "Postgres"
+Host = "127.0.0.1"
+Port = 5432
+User = "{{ db_user }}"
+Password = "{{ db_password }}"
+Name = "{{ db_name }}"
+
+[Logging]
+LogLevel = "debug"
+Path = "/var/log/hopfencloud/main.log"
+RotationFileSize = "10 MB"
+MaxRotationCount = 10
+
+[[Logging.AdditionalFileLoggers]]
+Name = "requests"
+AddToMainLogger = true
+Path = "/var/log/hopfencloud/requests.log"
+RotationFileSize = "10 MB"
+MaxRotationCount = 5
+AlternativePattern = "{h([{d(%Y-%m-%d %H:%M:%S)} | {({l}):5.5}])} {m}{n}"
