@@ -6,14 +6,16 @@
 #![deny(missing_docs)]
 // Disable unused_imports and dead_code while generating models
 // as the generation overwrites the main function and performs an early exit
-#![cfg_attr(feature = "rorm-main", allow(unused_imports, dead_code))]
+#![cfg_attr(
+    feature = "rorm-main",
+    allow(unused_imports, dead_code, unused_variables)
+)]
 
-use std::fs;
-use std::io;
 use std::io::Write;
 use std::path::Path;
 use std::process::exit;
 use std::time::Duration;
+use std::{fs, io};
 
 use actix_toolbox::logging::setup_logging;
 use actix_web::cookie::Key;
@@ -24,17 +26,16 @@ use base64::prelude::BASE64_STANDARD;
 use base64::Engine;
 use clap::{Parser, Subcommand};
 use log::error;
-use rorm::{insert, query, Model};
-use rorm::{Database, DatabaseConfiguration};
+use rorm::{insert, query, Database, DatabaseConfiguration, Model};
 use tokio::time::sleep;
 
 use crate::config::Config;
 use crate::models::{User, UserInsert};
 use crate::server::start_server;
 
-mod config;
+pub mod config;
 mod handler;
-mod models;
+pub mod models;
 mod server;
 
 #[derive(Subcommand)]
@@ -116,7 +117,7 @@ async fn main() -> Result<(), String> {
             insert!(&db, UserInsert)
                 .single(&UserInsert {
                     username: username.to_owned(),
-                    password: hashed_password,
+                    password_hash: hashed_password,
                     is_admin: true,
                     last_login: None,
                 })

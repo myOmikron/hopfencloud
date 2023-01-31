@@ -3,7 +3,7 @@ use actix_toolbox::tb_middleware::{
 };
 use actix_web::cookie::Key;
 use actix_web::middleware::Compress;
-use actix_web::web::{post, Data, JsonConfig, PayloadConfig};
+use actix_web::web::{get, post, Data, JsonConfig, PayloadConfig};
 use actix_web::{App, HttpServer};
 use base64::prelude::BASE64_STANDARD;
 use base64::Engine;
@@ -44,6 +44,7 @@ pub(crate) async fn start_server(config: &Config, database: Database) -> Result<
             .app_data(PayloadConfig::default())
             .app_data(JsonConfig::default())
             .route("/api/v1/login", post().to(api::login))
+            .route("/api/v1/test", get().to(api::test))
     })
     .bind((
         config.server.listen_address.as_str(),

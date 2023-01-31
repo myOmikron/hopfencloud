@@ -2,21 +2,24 @@ use rorm::{ForeignModel, Model, Patch};
 
 use crate::models::User;
 
-/**
-Representation of a file
-*/
+/// Representation of a file
 #[derive(Model)]
-pub(crate) struct File {
+pub struct File {
+    /// Unique identifier of a file
     #[rorm(id)]
-    pub(crate) id: i64,
+    pub id: i64,
 
+    /// Owner of the file
     #[rorm(on_delete = "Cascade", on_update = "Cascade")]
-    pub(crate) owner: ForeignModel<User>,
+    pub owner: ForeignModel<User>,
 
+    /// Filename
     #[rorm(max_length = 1024)]
-    pub(crate) file_name: String,
+    pub file_name: String,
+
+    /// Parent of the file
     #[rorm(on_delete = "Cascade", on_update = "Cascade")]
-    pub(crate) parent: Option<ForeignModel<File>>,
+    pub parent: Option<ForeignModel<File>>,
 }
 
 #[derive(Patch)]

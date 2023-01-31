@@ -1,12 +1,13 @@
 use std::fmt::{Display, Formatter};
 
+use actix_toolbox::tb_middleware::actix_session::SessionInsertError;
 use actix_web::body::BoxBody;
 use actix_web::HttpResponse;
 use log::{error, trace};
 use serde::Serialize;
 use serde_repr::Serialize_repr;
 
-pub(crate) use auth::login;
+pub(crate) use crate::handler::api::auth::{login, test};
 
 mod auth;
 
@@ -14,7 +15,6 @@ pub(crate) type ApiResult<T> = Result<T, ApiError>;
 
 #[derive(Serialize)]
 pub(crate) struct ErrorResponse {
-    success: bool,
     status_code: ApiStatusCode,
     message: String,
 }
@@ -22,7 +22,6 @@ pub(crate) struct ErrorResponse {
 impl ErrorResponse {
     fn new(status_code: ApiStatusCode, message: String) -> Self {
         Self {
-            success: false,
             status_code,
             message,
         }
@@ -32,9 +31,10 @@ impl ErrorResponse {
 #[derive(Serialize_repr)]
 #[repr(u16)]
 pub(crate) enum ApiStatusCode {
-    LoginFailed = 400,
-    InternalServerError = 500,
-    DatabaseError = 501,
+    LoginFailed = 1000,
+    InternalServerError = 2000,
+    DatabaseError = 2001,
+    SessionError = 2002,
 }
 
 #[derive(Debug)]
@@ -42,6 +42,7 @@ pub(crate) enum ApiError {
     LoginFailed,
     DatabaseError(rorm::Error),
     InvalidHash(argon2::password_hash::Error),
+    SessionInsert(SessionInsertError),
 }
 
 impl From<rorm::Error> for ApiError {
@@ -56,12 +57,19 @@ impl From<argon2::password_hash::Error> for ApiError {
     }
 }
 
+impl From<SessionInsertError> for ApiError {
+    fn from(value: SessionInsertError) -> Self {
+        Self::SessionInsert(value)
+    }
+}
+
 impl Display for ApiError {
     fn fmt(&self, f: &mut Formatter<'_>) -> std::fmt::Result {
         match self {
             ApiError::LoginFailed => write!(f, "Login failed"),
             ApiError::DatabaseError(_) => write!(f, "Database error occurred"),
             ApiError::InvalidHash(_) => write!(f, "Internal server error"),
+            ApiError::SessionInsert(_) => write!(f, "Session error occurred"),
         }
     }
 }
@@ -87,6 +95,13 @@ impl actix_web::ResponseError for ApiError {
                 error!("Hashing error: {err}");
                 HttpResponse::Ok().json(ErrorResponse::new(
                     ApiStatusCode::InternalServerError,
+                    self.to_string(),
+                ))
+            }
+            ApiError::SessionInsert(err) => {
+                error!("Session insert: {err}");
+                HttpResponse::Ok().json(ErrorResponse::new(
+                    ApiStatusCode::SessionError,
                     self.to_string(),
                 ))
             }
