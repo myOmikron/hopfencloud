@@ -25,9 +25,16 @@ pub struct User {
     /// Flag whether the user is an administrative user
     pub is_admin: bool,
 
+    /// Flag whether 2fa is required for this user
+    pub second_factor_required: bool,
+
     /// List of files the user owns
     #[rorm(field = "File::F.owner")]
     pub files: BackRef<File>,
+
+    /// List of security keys the user owns
+    #[rorm(field = "UserSecurityKey::F.user")]
+    pub security_keys: BackRef<UserSecurityKey>,
 
     /// Datetime when the user was created
     #[rorm(auto_create_time)]

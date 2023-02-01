@@ -1,6 +1,6 @@
 use std::fmt::{Display, Formatter};
 
-use actix_toolbox::tb_middleware::actix_session::SessionInsertError;
+use actix_toolbox::tb_middleware::actix_session::{SessionGetError, SessionInsertError};
 use actix_web::body::BoxBody;
 use actix_web::HttpResponse;
 use log::{error, trace};
@@ -32,6 +32,9 @@ impl ErrorResponse {
 #[repr(u16)]
 pub(crate) enum ApiStatusCode {
     LoginFailed = 1000,
+    Unauthenticated = 1001,
+    Missing2FA = 1002,
+    MissingSecurityKey = 1003,
     InternalServerError = 2000,
     DatabaseError = 2001,
     SessionError = 2002,
@@ -40,9 +43,13 @@ pub(crate) enum ApiStatusCode {
 #[derive(Debug)]
 pub(crate) enum ApiError {
     LoginFailed,
+    Missing2FA,
+    Unauthenticated,
     DatabaseError(rorm::Error),
     InvalidHash(argon2::password_hash::Error),
     SessionInsert(SessionInsertError),
+    SessionGet(SessionGetError),
+    SessionCorrupt,
 }
 
 impl From<rorm::Error> for ApiError {
@@ -69,7 +76,12 @@ impl Display for ApiError {
             ApiError::LoginFailed => write!(f, "Login failed"),
             ApiError::DatabaseError(_) => write!(f, "Database error occurred"),
             ApiError::InvalidHash(_) => write!(f, "Internal server error"),
-            ApiError::SessionInsert(_) => write!(f, "Session error occurred"),
+            ApiError::SessionInsert(_) | ApiError::SessionGet(_) => {
+                write!(f, "Session error occurred")
+            }
+            ApiError::Missing2FA => write!(f, "Missing 2fa"),
+            ApiError::Unauthenticated => write!(f, "Unauthenticated"),
+            ApiError::SessionCorrupt => write!(f, "Session corrupt"),
         }
     }
 }
@@ -101,6 +113,37 @@ impl actix_web::ResponseError for ApiError {
             ApiError::SessionInsert(err) => {
                 error!("Session insert: {err}");
                 HttpResponse::Ok().json(ErrorResponse::new(
+                    ApiStatusCode::SessionError,
+                    self.to_string(),
+                ))
+            }
+            ApiError::SessionGet(err) => {
+                error!("Session get: {err}");
+                HttpResponse::Ok().json(ErrorResponse::new(
+                    ApiStatusCode::SessionError,
+                    self.to_string(),
+                ))
+            }
+            ApiError::Missing2FA => {
+                trace!("Missing 2fa");
+
+                HttpResponse::Forbidden().json(ErrorResponse::new(
+                    ApiStatusCode::Missing2FA,
+                    self.to_string(),
+                ))
+            }
+            ApiError::Unauthenticated => {
+                trace!("Unauthenticated");
+
+                HttpResponse::Forbidden().json(ErrorResponse::new(
+                    ApiStatusCode::Unauthenticated,
+                    self.to_string(),
+                ))
+            }
+            ApiError::SessionCorrupt => {
+                error!("Session is corrupt");
+
+                HttpResponse::InternalServerError().json(ErrorResponse::new(
                     ApiStatusCode::SessionError,
                     self.to_string(),
                 ))

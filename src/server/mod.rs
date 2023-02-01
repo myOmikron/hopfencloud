@@ -3,7 +3,7 @@ use actix_toolbox::tb_middleware::{
 };
 use actix_web::cookie::Key;
 use actix_web::middleware::Compress;
-use actix_web::web::{get, post, Data, JsonConfig, PayloadConfig};
+use actix_web::web::{get, post, scope, Data, JsonConfig, PayloadConfig};
 use actix_web::{App, HttpServer};
 use base64::prelude::BASE64_STANDARD;
 use base64::Engine;
@@ -12,11 +12,17 @@ use rorm::Database;
 use crate::config::Config;
 use crate::handler::api;
 use crate::server::error::ServerStartError;
+use crate::server::middleware::authentication_required::AuthenticationRequired;
 
 mod error;
+mod middleware;
 
 /**
 Starts the server
+
+**Parameter**:
+- `config`: Reference to a [Config].
+- `database`: [Database] instance
 */
 pub(crate) async fn start_server(
     config: &Config,
@@ -40,8 +46,12 @@ pub(crate) async fn start_server(
             .app_data(Data::new(database.clone()))
             .app_data(PayloadConfig::default())
             .app_data(JsonConfig::default())
-            .route("/api/v1/login", post().to(api::login))
-            .route("/api/v1/test", get().to(api::test))
+            .route("/api/v1/auth/login", post().to(api::login))
+            .service(
+                scope("/api/v1")
+                    .wrap(AuthenticationRequired)
+                    .route("test", get().to(api::test)),
+            )
     })
     .bind((
         config.server.listen_address.as_str(),
