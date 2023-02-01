@@ -2,6 +2,11 @@
   "name": "frontend",
   "version": "0.1.0",
   "private": true,
+  "prettier": {
+    "useTabs": false,
+    "tabWidth": 4,
+    "printWidth": 120
+  },
   "dependencies": {
     "@types/node": "^16.18.11",
     "@types/react": "^18.0.27",
