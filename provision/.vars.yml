@@ -1,3 +1,8 @@
 ---
 - db_password: ""
   secret_key: ""
+  db_name: "hopfencloud"
+  db_user: "hopfencloud"
+  server_name: "hopfencloud.test"
+  origin_uri: "https://hopfencloud.test:443"
+  origin_name: "Hopfencloud"

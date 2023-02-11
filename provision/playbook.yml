@@ -3,11 +3,6 @@
   hosts: all
   vars:
     ansible_become: yes
-    db_name: hopfencloud
-    db_user: hopfencloud
-    server_name: hopfencloud.test
-    origin_uri: https://hopfencloud.test:443
-    origin_name: Hopfencloud
   vars_files:
     - vars.yml
   tasks:
