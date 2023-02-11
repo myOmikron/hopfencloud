@@ -127,7 +127,7 @@
     - name: Copy frontend to static dir
       ansible.builtin.copy:
         remote_src: yes
-        src: /vagrant/frontend/build/
+        src: /vagrant/frontend/dist/
         dest: /var/www/hopfencloud
 
     - name: Apply nginx template
