@@ -61,6 +61,10 @@ pub struct UserSecurityKey {
     #[rorm(id)]
     pub id: i64,
 
+    /// The name of the key
+    #[rorm(max_length = 255)]
+    pub name: String,
+
     /// Owner of the key
     #[rorm(on_delete = "Cascade", on_update = "Cascade")]
     pub user: ForeignModel<User>,
@@ -77,6 +81,7 @@ pub struct UserSecurityKey {
 #[rorm(model = "UserSecurityKey")]
 pub(crate) struct UserSecurityKeyInsert {
     pub(crate) id: i64,
+    pub(crate) name: String,
     pub(crate) user: ForeignModel<User>,
     pub(crate) key: Vec<u8>,
 }
